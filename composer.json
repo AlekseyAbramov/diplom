@@ -1,0 +1,17 @@
+{
+    "name": "aleksey/diplom",
+    "description": "diplom php-20",
+    "license": "project",
+    "authors": [
+        {
+            "name": "Aleksey Abramov",
+            "email": "capiton2008@yandex.ru"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "DiplomApp\\": ["app/classes/", "app/controllers", "app/models", "app/views"]
+        }
+    }
+}
