@@ -21,7 +21,7 @@ if (!empty($_POST)) {
              if ($_POST['login'] && $_POST['password']) {
                   $user = strip_tags($_POST['login']);
                   $password = password_hash(strip_tags($_POST['password']), PASSWORD_DEFAULT);
-                  $sth = $pdo->prepare("SELECT `login` FROM `user` WHERE login=?");
+                  $sth = $db->prepare("SELECT `login` FROM `users` WHERE login=?");
                   $sth->execute(array($user));
                   $w = $sth->fetchColumn();
                   if($w) {
@@ -29,8 +29,10 @@ if (!empty($_POST)) {
                  } else {
                      $names = $user. ','. $password;
                      $names = explode(',', $names);
+                     var_dump($names);
                      $placeholder = implode(',', array_fill(0, count($names), '?'));
-                     $sth = $pdo->prepare("INSERT INTO `user`(`login`, `password`) VALUES ($placeholder)");
+                     var_dump($placeholder);
+                     $sth = $db->prepare("INSERT INTO `users`(`login`, `password`) VALUES ($placeholder)");
                      $sth->execute($names);
                      echo 'Вы успешно зарегистрировались, можите войти в систему.';
                   }
@@ -50,7 +52,7 @@ if (!empty($_POST)) {
             if($_POST['login'] && $_POST['password']) {
                 $user = strip_tags($_POST['login']);
                 $password = $_POST['password'];
-                $sth = $pdo->prepare("SELECT `id`, `login`, `password` FROM `user` WHERE login=?");
+                $sth = $db->prepare("SELECT `id`, `login`, `password` FROM `users` WHERE login=?");
                 $sth->execute(array($user));
                 $w = $sth->fetch();
                 if (!$w) {
@@ -59,7 +61,7 @@ if (!empty($_POST)) {
                     if($w['login'] == $user && password_verify($password, $w['password'])) {
                         $_SESSION['user'] = $user;
                         $_SESSION['id'] = $w['id'];
-                        header('Location: index.php');
+                        header('Location: admin');
                     } else {
                         echo 'Вы ввели не правильный пароль';
                     }
