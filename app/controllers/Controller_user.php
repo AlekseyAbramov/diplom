@@ -1,8 +1,8 @@
 <?php
 
-class Controller_User  extends \DiplomApp\Controller {
+class Controller_user  extends \DiplomApp\Controller {
     function action_index()
     {
-        $this->view->generate('user_view.php', 'login_view.php');
+        $this->view->generate('login_view.php', 'login_view.php');
     }
 }

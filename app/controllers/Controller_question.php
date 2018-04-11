@@ -1,9 +1,9 @@
 <?php
 
-class Controller_Question  extends \DiplomApp\Controller {
-    function action_add()
+class Controller_question  extends \DiplomApp\Controller {
+    function action_index()
     {
-        $this->view->generate('question_view.php', 'question_view.php');
+        $this->view->generate('question_view.php', 'template_view.php');
     }
 }
 
