@@ -1,10 +1,10 @@
 <?php
 
-namespace DiplomApp;
+namespace diplomApp\core;
 class View
-{           
-    function generate($content_view, $template_view)
-    {		
-	include dirname(__DIR__). DIRECTORY_SEPARATOR. 'views'. DIRECTORY_SEPARATOR. $template_view;
+{
+    public function generate($db, $contentView, $templateView)
+    {
+        include dirname(__DIR__). DIRECTORY_SEPARATOR. 'views'. DIRECTORY_SEPARATOR. $templateView;
     }
 }

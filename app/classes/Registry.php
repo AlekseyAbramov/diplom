@@ -5,7 +5,7 @@
  *
  * @author capit
  */
-namespace DiplomApp;
+namespace diplomApp\classes;
 
 class Registry implements \ArrayAccess {
     private $vars = array();

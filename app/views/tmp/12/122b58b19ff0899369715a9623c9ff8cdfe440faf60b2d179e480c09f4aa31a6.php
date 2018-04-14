@@ -35,8 +35,8 @@ class __TwigTemplate_ffebf254ce7847db124784b6f507e83ec73a0e0497d8a5b067637b7e446
         <header>
             <h1>FAQ</h1>
         </header>
-        <a href=\"http://localhost/diplom/public/user\">Войти(Зарегистрироваться)</a>
-        <a href=\"http://localhost/diplom/public/question\">Задать вопрос</a>
+        <a href=\"http://localhost/diplom/public/User\">Войти(Зарегистрироваться)</a>
+        <a href=\"http://localhost/diplom/public/Question\">Задать вопрос</a>
         <section class=\"cd-faq\">
             <ul class=\"cd-faq-categories\">
                 ";
@@ -59,8 +59,67 @@ class __TwigTemplate_ffebf254ce7847db124784b6f507e83ec73a0e0497d8a5b067637b7e446
         echo "            </ul>
             
             <div class=\"cd-faq-items\">
-                \$content_view
-            </div>
+                ";
+        // line 26
+        $context['_parent'] = $context;
+        $context['_seq'] = twig_ensure_traversable(($context["menus"] ?? null));
+        foreach ($context['_seq'] as $context["_key"] => $context["menu"]) {
+            // line 27
+            echo "                    <ul id=\"";
+            echo twig_escape_filter($this->env, $context["menu"], "html", null, true);
+            echo "\" class=\"cd-faq-group\">
+                        ";
+            // line 28
+            $context['_parent'] = $context;
+            $context['_seq'] = twig_ensure_traversable(($context["posts"] ?? null));
+            foreach ($context['_seq'] as $context["key"] => $context["value"]) {
+                // line 29
+                echo "                            ";
+                if (($context["key"] == $context["menu"])) {
+                    // line 30
+                    echo "                                ";
+                    $context['_parent'] = $context;
+                    $context['_seq'] = twig_ensure_traversable($context["value"]);
+                    foreach ($context['_seq'] as $context["_key"] => $context["post"]) {
+                        // line 31
+                        echo "                                    <li class=\"cd-faq-title\"><h2>";
+                        echo twig_escape_filter($this->env, $context["menu"], "html", null, true);
+                        echo "</h2></li>
+                                    <li>
+                                        <a class=\"cd-faq-trigger\" href=\"#0\">";
+                        // line 33
+                        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["post"], "question", array()), "html", null, true);
+                        echo "</a>
+                                        <div class=\"cd-faq-content\">
+                                            <p>";
+                        // line 35
+                        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["post"], "answer", array()), "html", null, true);
+                        echo "</p>
+                                        </div>
+                                    </li>
+                                ";
+                    }
+                    $_parent = $context['_parent'];
+                    unset($context['_seq'], $context['_iterated'], $context['_key'], $context['post'], $context['_parent'], $context['loop']);
+                    $context = array_intersect_key($context, $_parent) + $_parent;
+                    // line 39
+                    echo "                            ";
+                }
+                // line 40
+                echo "                        ";
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_iterated'], $context['key'], $context['value'], $context['_parent'], $context['loop']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 41
+            echo "                    </ul>
+                ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['menu'], $context['_parent'], $context['loop']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 43
+        echo "            </div>
         </section>
         <script src=\"js/jquery-2.1.1.js\"></script>
         <script src=\"js/jquery.mobile.custom.min.js\"></script>
@@ -83,7 +142,7 @@ class __TwigTemplate_ffebf254ce7847db124784b6f507e83ec73a0e0497d8a5b067637b7e446
 
     public function getDebugInfo()
     {
-        return array (  59 => 23,  48 => 21,  44 => 20,  23 => 1,);
+        return array (  122 => 43,  115 => 41,  109 => 40,  106 => 39,  96 => 35,  91 => 33,  85 => 31,  80 => 30,  77 => 29,  73 => 28,  68 => 27,  64 => 26,  59 => 23,  48 => 21,  44 => 20,  23 => 1,);
     }
 
     public function getSourceContext()

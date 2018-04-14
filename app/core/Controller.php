@@ -1,18 +1,17 @@
 <?php
 
-namespace DiplomApp;
+namespace diplomApp\core;
 class Controller {
-	
-	public $model;
-	public $view;
-	
-	function __construct()
-	{
-		$this->view = new \DiplomApp\View();
-	}
-	
-	function action_index()
-	{
-	}
+    public $model;
+    public $view;
+    
+    public function __construct()
+    {
+        $this->view = new \diplomApp\core\View();
+    }
+    
+    public function actionIndex($db)
+    {
+    }
 }
 

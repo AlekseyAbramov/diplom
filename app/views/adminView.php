@@ -1,5 +1,11 @@
 <?php
 
+$menuList = 'SELECT theme FROM themes';
+$sth = $db->query('SELECT theme FROM themes');
+while ($list = $sth->fetch(PDO::FETCH_NUM)) {
+    $menu[] = implode($list);
+}
+
 $dir = dirname(__DIR__). DIRECTORY_SEPARATOR. 'views'. DIRECTORY_SEPARATOR ;
 $loader = new Twig_Loader_Filesystem($dir. 'templates');
 $twig = new Twig_Environment($loader, [

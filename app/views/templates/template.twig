@@ -13,8 +13,8 @@
         <header>
             <h1>FAQ</h1>
         </header>
-        <a href="http://localhost/diplom/public/user">Войти(Зарегистрироваться)</a>
-        <a href="http://localhost/diplom/public/question">Задать вопрос</a>
+        <a href="http://localhost/diplom/public/User">Войти(Зарегистрироваться)</a>
+        <a href="http://localhost/diplom/public/Question">Задать вопрос</a>
         <section class="cd-faq">
             <ul class="cd-faq-categories">
                 {% for menu in menus %}
@@ -23,8 +23,22 @@
             </ul>
             
             <div class="cd-faq-items">
-                {% for post in posts %}
-                    {{post}}
+                {% for menu in menus %}
+                    <ul id="{{menu}}" class="cd-faq-group">
+                        {% for key, value in posts %}
+                            {% if key==menu %}
+                                {% for post in value %}
+                                    <li class="cd-faq-title"><h2>{{menu}}</h2></li>
+                                    <li>
+                                        <a class="cd-faq-trigger" href="#0">{{post.question}}</a>
+                                        <div class="cd-faq-content">
+                                            <p>{{post.answer}}</p>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
                 {% endfor %}
             </div>
         </section>

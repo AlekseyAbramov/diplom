@@ -1,6 +1,18 @@
 <?php
-require_once 'core/Model.php';
-require_once 'core/View.php';
-require_once 'core/Controller.php';
-require_once 'core/Router.php';
-Router::start(); // запускаем маршрутизатор
+
+$model = new \diplomApp\core\Model();
+$view = new \diplomApp\core\View();
+$controller = new \diplomApp\core\Controller();
+$router = new \diplomApp\core\Router();
+
+//Подключаемся к базе данных
+$config = require_once 'config.php';
+$db = \diplomApp\classes\DataBase::connect(
+        $config['mysql']['host'],
+        $config['mysql']['dbname'],
+        $config['mysql']['user'],
+        $config['mysql']['pass']
+);
+
+//Запускаем роутер
+$router->start($db);

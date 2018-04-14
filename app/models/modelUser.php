@@ -1,9 +1,5 @@
 <?php
-
-// Подключаемся к базе данных
-require_once dirname(__DIR__). DIRECTORY_SEPARATOR. 'db_connect.php';
-$g = dirname(__DIR__). DIRECTORY_SEPARATOR. 'db_connect.php';
-var_dump($g);        
+      
 //Запускаем сессию
 session_start();
 var_dump($_POST);
