@@ -1,8 +1,9 @@
 <?php
-//Получаем список администраторов
-$sth = $db->query('SELECT id, login FROM `users`');
+
+//Получаем список тем
+$sth = $db->query('SELECT * FROM `themes`');
 while ($list = $sth->fetch(PDO::FETCH_ASSOC)) {
-    $users[] = $list;
+    $themes[] = $list;
 }
 
 $dir = dirname(__DIR__). DIRECTORY_SEPARATOR. 'views'. DIRECTORY_SEPARATOR ;
@@ -11,4 +12,5 @@ $twig = new Twig_Environment($loader, [
     'cache' => $dir. 'tmp',
     'auto_reload' => TRUE
 ]);
-echo $twig->render('admin.twig', ['users' => $users]);
+echo $twig->render('adminQuestion.twig', ['themes' => $themes]);
+

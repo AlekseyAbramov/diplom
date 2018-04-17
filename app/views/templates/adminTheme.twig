@@ -18,37 +18,46 @@ and open the template in the editor.
             <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/theme">Темы</a>
             <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/question">Вопросы</a>
             <div class="row">
-                <h2>Управление администраторами сайта</h2>
+                <h2>Управление Темами</h2>
                 <div class="col s3">
                     <form method="POST">
-                        <input type="text" name="login" placeholder="Логин" value="" />
-                        <input type="text" name="password" placeholder="Пароль" value="" />
-                        <input type="submit" name="adminAdd" value="Добавить" />
+                        <input type="text" name="newTheme" placeholder="Тема" value="" />
+                        <input type="submit" name="themeAdd" value="Добавить" />
                     </form>
                 </div>
                 <div class="col s9">
                     <table class="striped">
                         <thead>
                            <tr>
-                                <th>Логин</th>
-                                <th>Изменить пароль</th>
-                                <th>Удалить</th>
+                                <th>Тема</th>
+                                <th>Всего вопросов</th>
+                                <th>Вопросов опубликованных</th>
+                                <th>Вопросов без ответа</th>
+                                <th>Удалить тему с вопросами</th>
                             </tr>
                         </thead>
-                        {% for admin in users %}
+                        {% for theme in themes %}
                         <tr>
-                            <td>{{ admin.login }}</td>
+                            <td>{{theme.theme}}</td>
+                            {% for summ in sum %}
+                                {% if summ.id==theme.id %}
+                                    <td>{{summ.sum}}</td>
+                                {% endif %}
+                            {% endfor %}
+                            {% for summYes in sumYes %}
+                                {% if summYes.id==theme.id %}
+                                    <td>{{summYes.sum}}</td>
+                                {% endif %}
+                            {% endfor %}
+                            {% for summNo in sumNo %}
+                                {% if summNo.id==theme.id %}
+                                    <td>{{summNo.sum}}</td>
+                                {% endif %}
+                            {% endfor %}
                             <td>
                                 <form method="POST">
-                                    <input type="hidden" name="editPass_id" placeholder="" value="{{ admin.id }}" />
-                                    <input type="text" name="newPassword" placeholder="Пароль" value="" />
-                                    <input type="submit" name="passEdit" value="Изменить" />
-                                </form>
-                            </td>
-                            <td>
-                                <form method="POST">
-                                    <input type="hidden" name="dell_id" placeholder="" value="{{ admin.id }}" />
-                                    <input type="submit" name="dell" value="Удалить" />
+                                    <input type="hidden" name="theme_id" placeholder="" value="{{ theme.id }}" />
+                                    <input type="submit" name="themeDell" value="Удалить" />
                                 </form>
                             </td>
                         </tr>
@@ -61,3 +70,4 @@ and open the template in the editor.
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     </body>
 </html>
+

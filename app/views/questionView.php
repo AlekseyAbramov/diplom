@@ -1,9 +1,10 @@
 <?php
 
-//Получаем список тем
-$menu_list = "SELECT `theme` FROM `themes`";
-$list = $db->query($menu_list);
-$menu = $list->fetch(PDO::FETCH_NUM);
+//Получаем список тем для формирования меню
+$sth = $db->query('SELECT theme FROM themes');
+while ($list = $sth->fetch(PDO::FETCH_NUM)) {
+    $menu[] = implode($list);
+}
 
 //формируем страницу с помощью TWIG
 $dir = dirname(__DIR__). DIRECTORY_SEPARATOR. 'views'. DIRECTORY_SEPARATOR ;

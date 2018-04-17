@@ -10,7 +10,7 @@ while ($list = $sth->fetch(PDO::FETCH_NUM)) {
 //Получаем вопросы на которые есть ответ
 foreach ($menu as $thema){
     $postList = "SELECT question, answers.answer FROM `questions` JOIN themes ON themes.id=theme_id  "
-                                                               . "JOIN answers ON answers.id=answer_id WHERE themes.theme='$thema'";
+                                                               . "JOIN answers ON answers.id=answer_id WHERE themes.theme='$thema' AND status='2'";
     $sth = $db->query($postList);
     while ($list = $sth->fetch(PDO::FETCH_ASSOC)) {
         $post[$thema][] = $list;

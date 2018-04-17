@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Администрирование</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin">Администраторы</a>
+            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/theme">Темы</a>
+            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/question">Вопросы</a>
+            <div class="row">
+                <div class="col s12">
+                    <h2>Редактировать вопрос</h2>
+                    </div>
+                    <div class="col s12">
+                        <table class="striped">
+                            <thead>
+                                <tr>
+                                    <th>Вопрос</th>
+                                    <th>Статус</th>
+                                    <th>Ответ</th>
+                                    <th>Тема</th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>{{question.question}}</td>
+                                {% if question.status == 0 %}
+                                <td></td>
+                                {% endif %}
+                                {% if question.status == 1 %}
+                                <td>Без ответа</td>
+                                {% endif %}
+                                {% if question.status == 2 %}
+                                <td>Опубликован</td>
+                                {% endif %}
+                                {% if question.status == 3 %}
+                                <td>Скрыт</td>
+                                {% endif %}
+                                    {% if answer %}
+                                        <td>{{answer.answer}}</td>
+                                    {% else %}
+                                        <td>Нет ответа</td>
+                                    {% endif %}
+                                    <td>{{question.theme}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col s12">
+                        <table class="striped">
+                            <thead>
+                                <tr>
+                                    <th>Ответить</th>
+                                    <th>Скрыть(опубликовать)</th>
+                                    <th>Сменить тему</th>
+                                    <th>Удалить</th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>
+                                    <form method="POST">
+                                        {% if answer %}
+                                            <input type="hidden" name="answer_id" placeholder="" value="{{ answer.id }}" />
+                                        {% endif %}
+                                        <input type="hidden" name="question_id" placeholder="" value="{{question.id}}" />
+                                        <textarea name="text" class="materialize-textarea">
+                                            {% if answer %}
+                                                {{answer.answer}}
+                                            {% else %}
+                                                Ответ
+                                            {% endif %}
+                                        </textarea>
+                                        <input type="submit" name="answerEdit" value="Редактировать" />
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="POST">
+                                        <input type="hidden" name="guestion_status" placeholder="" value="{{ question.status }}" />
+                                        <input type="hidden" name="guestion_id" placeholder="" value="{{ question.id }}" />
+                                        <input type="submit" name="questionEditStatus" value="Скрыть(опубликовать)" />
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="POST">
+                                        <input type="hidden" name="guestion_id" placeholder="" value="{{ question.id }}" />
+                                        <select class="browser-default" name="themeEdit">
+                                            {% for theme in themes %}
+                                                <option value="{{theme.id}}">{{theme.theme}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="submit" name="questionThemeEdit" value="Отправить" />
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="POST">
+                                        <input type="hidden" name="guestion_id" placeholder="" value="{{ question.id }}" />
+                                        <input type="submit" name="questionEditDell" value="Удалить" />
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    </body>
+</html>
+

@@ -20,13 +20,13 @@
                 <input type="text" name="name" placeholder="Имя" />
                 <input type="text" name="email" placeholder="e-mail" />
                 <label for="theme">Тема вопроса</label>
-                <select name="sort_by">
+                <select name="theme">
                     {% for menu in menus %}
-                        <option value="date_added">{{menu}}</option>
+                        <option value="{{menu}}">{{menu}}</option>
                     {% endfor %}
                 </select>
-                <input type="text" name="text" placeholder="" />
-                <input type="submit" name="theme" value="Отправить" />
+                <p><textarea name="text" cols="70" rows="4"></textarea></p>
+                <input type="submit" name="question_add" value="Отправить" />
             </form>
         </section>
         <script src="js/jquery-2.1.1.js"></script>

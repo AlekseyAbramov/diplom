@@ -35,11 +35,69 @@ and open the template in the editor.
         <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css\">
     </head>
     <body>
-        Будет что-то для администрирования
-        <?php
-        // put your code here
-        ?>
-        
+        <div class=\"container\">
+            <a class=\"waves-effect waves-light btn-small\" href=\"http://localhost/diplom/public/admin\">Администраторы</a>
+            <a class=\"waves-effect waves-light btn-small\" href=\"http://localhost/diplom/public/admin/theme\">Темы</a>
+            <a class=\"waves-effect waves-light btn-small\" href=\"http://localhost/diplom/public/admin/question\">Вопросы</a>
+            <div class=\"row\">
+                <h2>Управление администраторами сайта</h2>
+                <div class=\"col s3\">
+                    <form method=\"POST\">
+                        <input type=\"text\" name=\"login\" placeholder=\"Логин\" value=\"\" />
+                        <input type=\"text\" name=\"password\" placeholder=\"Пароль\" value=\"\" />
+                        <input type=\"submit\" name=\"adminAdd\" value=\"Добавить\" />
+                    </form>
+                </div>
+                <div class=\"col s9\">
+                    <table class=\"striped\">
+                        <thead>
+                           <tr>
+                                <th>Логин</th>
+                                <th>Изменить пароль</th>
+                                <th>Удалить</th>
+                            </tr>
+                        </thead>
+                        ";
+        // line 38
+        $context['_parent'] = $context;
+        $context['_seq'] = twig_ensure_traversable(($context["users"] ?? null));
+        foreach ($context['_seq'] as $context["_key"] => $context["admin"]) {
+            // line 39
+            echo "                        <tr>
+                            <td>";
+            // line 40
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["admin"], "login", array()), "html", null, true);
+            echo "</td>
+                            <td>
+                                <form method=\"POST\">
+                                    <input type=\"hidden\" name=\"editPass_id\" placeholder=\"\" value=\"";
+            // line 43
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["admin"], "id", array()), "html", null, true);
+            echo "\" />
+                                    <input type=\"text\" name=\"newPassword\" placeholder=\"Пароль\" value=\"\" />
+                                    <input type=\"submit\" name=\"passEdit\" value=\"Изменить\" />
+                                </form>
+                            </td>
+                            <td>
+                                <form method=\"POST\">
+                                    <input type=\"hidden\" name=\"dell_id\" placeholder=\"\" value=\"";
+            // line 50
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["admin"], "id", array()), "html", null, true);
+            echo "\" />
+                                    <input type=\"submit\" name=\"dell\" value=\"Удалить\" />
+                                </form>
+                            </td>
+                        </tr>
+                        ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['admin'], $context['_parent'], $context['loop']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 56
+        echo "                    </table>
+                </div>
+            </div>
+        </div>
         <!-- Compiled and minified JavaScript -->
         <script src=\"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js\"></script>
     </body>
@@ -52,9 +110,14 @@ and open the template in the editor.
         return "admin.twig";
     }
 
+    public function isTraitable()
+    {
+        return false;
+    }
+
     public function getDebugInfo()
     {
-        return array (  23 => 1,);
+        return array (  97 => 56,  85 => 50,  75 => 43,  69 => 40,  66 => 39,  62 => 38,  23 => 1,);
     }
 
     public function getSourceContext()

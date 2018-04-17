@@ -9,7 +9,6 @@ class Router
         $actionName = 'Index';
         
         $routes = explode('/', $_SERVER['REQUEST_URI']);
-        var_dump($routes);
         
         if (!empty($routes[3])) {
             $name = explode(".",$routes[3]);
@@ -29,12 +28,9 @@ class Router
         // подцепляем файл с классом модели (файла модели может и не быть)
         $modelFile = strtolower($modelName).'.php';
         $modelPath = dirname(__DIR__). DIRECTORY_SEPARATOR. 'models'. DIRECTORY_SEPARATOR. $modelFile;
-        var_dump($modelPath);
         if(file_exists($modelPath)) {
             include $modelPath;
-            echo 'Есть файл модели';
-        } else {
-            //throw new Exception ('Отсутствует файл модели: `' . $model_file . '`');
+            //echo 'Есть файл модели';
         }
         
         // подцепляем файл с классом контроллера
@@ -42,7 +38,7 @@ class Router
         $controllerPath = dirname(__DIR__). DIRECTORY_SEPARATOR. 'controllers'. DIRECTORY_SEPARATOR. $controllerFile;
         if(file_exists($controllerPath)) {
             include $controllerPath;
-            echo 'есть файл контроллера';
+            //echo 'есть файл контроллера';
         } else {
             throw new Exception ('Отсутствует файл контроллера: `' . $controllerFile . '`');
         }
