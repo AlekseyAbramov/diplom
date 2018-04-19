@@ -39,6 +39,7 @@ and open the template in the editor.
             <a class=\"waves-effect waves-light btn-small\" href=\"http://localhost/diplom/public/admin\">Администраторы</a>
             <a class=\"waves-effect waves-light btn-small\" href=\"http://localhost/diplom/public/admin/theme\">Темы</a>
             <a class=\"waves-effect waves-light btn-small\" href=\"http://localhost/diplom/public/admin/question\">Вопросы</a>
+            <a class=\"waves-effect waves-light btn-small\" href=\"http://localhost/diplom/public/exit\">Выход</a>
             <div class=\"row\">
                 <h2>Управление администраторами сайта</h2>
                 <div class=\"col s3\">
@@ -58,20 +59,20 @@ and open the template in the editor.
                             </tr>
                         </thead>
                         ";
-        // line 38
+        // line 39
         $context['_parent'] = $context;
         $context['_seq'] = twig_ensure_traversable(($context["users"] ?? null));
         foreach ($context['_seq'] as $context["_key"] => $context["admin"]) {
-            // line 39
+            // line 40
             echo "                        <tr>
                             <td>";
-            // line 40
+            // line 41
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["admin"], "login", array()), "html", null, true);
             echo "</td>
                             <td>
                                 <form method=\"POST\">
                                     <input type=\"hidden\" name=\"editPass_id\" placeholder=\"\" value=\"";
-            // line 43
+            // line 44
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["admin"], "id", array()), "html", null, true);
             echo "\" />
                                     <input type=\"text\" name=\"newPassword\" placeholder=\"Пароль\" value=\"\" />
@@ -81,7 +82,7 @@ and open the template in the editor.
                             <td>
                                 <form method=\"POST\">
                                     <input type=\"hidden\" name=\"dell_id\" placeholder=\"\" value=\"";
-            // line 50
+            // line 51
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["admin"], "id", array()), "html", null, true);
             echo "\" />
                                     <input type=\"submit\" name=\"dell\" value=\"Удалить\" />
@@ -93,7 +94,7 @@ and open the template in the editor.
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['admin'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 56
+        // line 57
         echo "                    </table>
                 </div>
             </div>
@@ -117,7 +118,7 @@ and open the template in the editor.
 
     public function getDebugInfo()
     {
-        return array (  97 => 56,  85 => 50,  75 => 43,  69 => 40,  66 => 39,  62 => 38,  23 => 1,);
+        return array (  98 => 57,  86 => 51,  76 => 44,  70 => 41,  67 => 40,  63 => 39,  23 => 1,);
     }
 
     public function getSourceContext()

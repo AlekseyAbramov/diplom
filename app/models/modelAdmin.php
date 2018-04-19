@@ -134,8 +134,24 @@ if (!empty($_SESSION['user'])) {
                 $newAnswerId = $db->lastInsertId();
                 $sth = $db->prepare("UPDATE `questions` SET `answer_id`='$newAnswerId' WHERE id=?");
                 $sth->execute(array($id));
+                $sth = $db->prepare("UPDATE `questions` SET `status`='2' WHERE id=?");
+                $sth->execute(array($id));
                 header("Location: /diplom/public/admin/edit");
             }
+        }
+        if (!empty($_POST['questionTextEdit'])) {
+            $questionEditTextId = $_POST['question_id'];
+            $textEdit = trim($_POST['text']);
+            $sth = $db->prepare("UPDATE `questions` SET `question`='$textEdit' WHERE id=?");
+            $sth->execute(array($questionEditTextId));
+            header("Location: /diplom/public/admin/edit");
+        }
+        if (!empty($_POST['guestionNameEdit'])) {
+            $questionEditNameId = $_POST['question_id'];
+            $nameEdit = trim($_POST['text']);
+            $sth = $db->prepare("UPDATE `questions` SET `name`='$nameEdit' WHERE id=?");
+            $sth->execute(array($questionEditNameId));
+            header("Location: /diplom/public/admin/edit");
         }
     }
 } else {

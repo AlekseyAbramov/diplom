@@ -35,8 +35,8 @@ class __TwigTemplate_ffebf254ce7847db124784b6f507e83ec73a0e0497d8a5b067637b7e446
         <header>
             <h1>FAQ</h1>
         </header>
-        <a href=\"http://localhost/diplom/public/User\">Войти(Зарегистрироваться)</a>
-        <a href=\"http://localhost/diplom/public/Question\">Задать вопрос</a>
+        <a href=\"http://localhost/diplom/public/User\">Войти в панель администратора </a> <br>
+        <a href=\"http://localhost/diplom/public/Question\"> Задать вопрос</a>
         <section class=\"cd-faq\">
             <ul class=\"cd-faq-categories\">
                 ";
@@ -68,24 +68,25 @@ class __TwigTemplate_ffebf254ce7847db124784b6f507e83ec73a0e0497d8a5b067637b7e446
             echo "                    <ul id=\"";
             echo twig_escape_filter($this->env, $context["menu"], "html", null, true);
             echo "\" class=\"cd-faq-group\">
-                        ";
+                        <li class=\"cd-faq-title\"><h2>";
             // line 28
+            echo twig_escape_filter($this->env, $context["menu"], "html", null, true);
+            echo "</h2></li>
+                        ";
+            // line 29
             $context['_parent'] = $context;
             $context['_seq'] = twig_ensure_traversable(($context["posts"] ?? null));
             foreach ($context['_seq'] as $context["key"] => $context["value"]) {
-                // line 29
+                // line 30
                 echo "                            ";
                 if (($context["key"] == $context["menu"])) {
-                    // line 30
+                    // line 31
                     echo "                                ";
                     $context['_parent'] = $context;
                     $context['_seq'] = twig_ensure_traversable($context["value"]);
                     foreach ($context['_seq'] as $context["_key"] => $context["post"]) {
-                        // line 31
-                        echo "                                    <li class=\"cd-faq-title\"><h2>";
-                        echo twig_escape_filter($this->env, $context["menu"], "html", null, true);
-                        echo "</h2></li>
-                                    <li>
+                        // line 32
+                        echo "                                    <li>
                                         <a class=\"cd-faq-trigger\" href=\"#0\">";
                         // line 33
                         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["post"], "question", array()), "html", null, true);
@@ -142,7 +143,7 @@ class __TwigTemplate_ffebf254ce7847db124784b6f507e83ec73a0e0497d8a5b067637b7e446
 
     public function getDebugInfo()
     {
-        return array (  122 => 43,  115 => 41,  109 => 40,  106 => 39,  96 => 35,  91 => 33,  85 => 31,  80 => 30,  77 => 29,  73 => 28,  68 => 27,  64 => 26,  59 => 23,  48 => 21,  44 => 20,  23 => 1,);
+        return array (  123 => 43,  116 => 41,  110 => 40,  107 => 39,  97 => 35,  92 => 33,  89 => 32,  84 => 31,  81 => 30,  77 => 29,  73 => 28,  68 => 27,  64 => 26,  59 => 23,  48 => 21,  44 => 20,  23 => 1,);
     }
 
     public function getSourceContext()

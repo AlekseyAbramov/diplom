@@ -2,7 +2,6 @@
       
 //Запускаем сессию
 session_start();
-var_dump($_POST);
       
 if(!empty($_POST['sign_in'])){
     if(!$_POST['login'] && !$_POST['password']) {

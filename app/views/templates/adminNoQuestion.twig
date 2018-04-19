@@ -21,18 +21,7 @@ and open the template in the editor.
             <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/exit">Выход</a>
             <div class="row">
                 <div class="col s12">
-                    <h2>Управление вопросами</h2>
-                    <div class="input-field col s4">
-                    <form method="POST">
-                        <select class="browser-default" name="theme_select">
-                            <option value="" disabled selected>Выберите тему вопросов</option>
-                            {% for theme in themes %}
-                                <option value="{{theme.id}}">{{theme.theme}}</option>
-                            {% endfor %}
-                        </select>
-                        <input type="submit" name="question_select" value="Отправить" />
-                    </form>
-                    </div>
+                    <h2>Вопросов без ответов нет, выберите другой раздел.</h2>
                 </div>
             </div>
         </div>
@@ -40,4 +29,6 @@ and open the template in the editor.
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     </body>
 </html>
+
+
 

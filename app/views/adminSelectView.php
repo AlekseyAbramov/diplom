@@ -1,13 +1,12 @@
 <?php
 
-var_dump($_SESSION);
-
 //Получаем список тем
 $sth = $db->query('SELECT * FROM `themes`');
 while ($list = $sth->fetch(PDO::FETCH_ASSOC)) {
     $themes[] = $list;
 }
 
+//Получаем список вопросов и ответов
 foreach ($themes as $theme) {
     if($theme['id'] == $_SESSION['theme_select']){
         $id = $theme['id'];
@@ -22,6 +21,7 @@ foreach ($themes as $theme) {
     }
 }
 
+//формируем страницу с помощью TWIG
 $dir = dirname(__DIR__). DIRECTORY_SEPARATOR. 'views'. DIRECTORY_SEPARATOR ;
 $loader = new Twig_Loader_Filesystem($dir. 'templates');
 $twig = new Twig_Environment($loader, [

@@ -21,4 +21,8 @@ class ControllerAdmin  extends \diplomApp\core\Controller {
     {
         $this->view->generate($db, 'adminEditView.php');
     }
+    public function actionAnswer($db)
+    {
+        $this->view->generate($db, 'adminAnswerView.php');
+    }
 }
