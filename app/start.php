@@ -1,6 +1,5 @@
 <?php
 
-$model = new \diplomApp\core\Model();
 $view = new \diplomApp\core\View();
 $controller = new \diplomApp\core\Controller();
 $router = new \diplomApp\core\Router();

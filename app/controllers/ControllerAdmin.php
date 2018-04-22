@@ -25,4 +25,10 @@ class ControllerAdmin  extends \diplomApp\core\Controller {
     {
         $this->view->generate($db, 'adminAnswerView.php');
     }
+    public function actionExit()
+    {
+        session_start();
+        session_destroy();
+        header('Location: /diplom/public/');
+    }
 }
