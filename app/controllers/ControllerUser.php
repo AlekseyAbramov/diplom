@@ -1,8 +1,9 @@
 <?php
 
+namespace diplomApp\controllers;
 class ControllerUser  extends \diplomApp\core\Controller {
-    public function actionIndex($db)
+    public function actionIndex($db, $dat)
     {
-        $this->view->generate($db, 'loginView.php');
+        echo $this->twig->render('login.twig');
     }
 }

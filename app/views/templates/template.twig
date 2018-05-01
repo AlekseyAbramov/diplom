@@ -1,50 +1,31 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Главная</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
-        <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
-        <script src="js/modernizr.js"></script> <!-- Modernizr -->
-    </head>
-    <body>
-        <header>
-            <h1>FAQ</h1>
-        </header>
-        <a href="http://localhost/diplom/public/User">Войти в панель администратора </a> <br>
-        <a href="http://localhost/diplom/public/Question"> Задать вопрос</a>
-        <section class="cd-faq">
-            <ul class="cd-faq-categories">
-                {% for menu in menus %}
-                    <li><a href="#{{menu}}">{{menu}}</a></li> 
+{% include 'header.twig' %}
+<a href="/diplom/public/User">Войти в панель администратора </a> <br>
+<a href="/diplom/public/Question"> Задать вопрос</a>
+<section class="cd-faq">
+    <ul class="cd-faq-categories">
+        {% for menu in menus %}
+            <li><a href="#{{menu}}">{{menu}}</a></li> 
+        {% endfor %}
+    </ul>      
+    <div class="cd-faq-items">
+        {% for menu in menus %}
+            <ul id="{{menu}}" class="cd-faq-group">
+                <li class="cd-faq-title"><h2>{{menu}}</h2></li>
+                {% for key, value in posts %}
+                    {% if key==menu %}
+                        {% for post in value %}
+                            <li>
+                                <a class="cd-faq-trigger" href="#0">{{post.question}}</a>
+                                <div class="cd-faq-content">
+                                    <p>{{post.answer}}</p>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
                 {% endfor %}
             </ul>
-            
-            <div class="cd-faq-items">
-                {% for menu in menus %}
-                    <ul id="{{menu}}" class="cd-faq-group">
-                        <li class="cd-faq-title"><h2>{{menu}}</h2></li>
-                        {% for key, value in posts %}
-                            {% if key==menu %}
-                                {% for post in value %}
-                                    <li>
-                                        <a class="cd-faq-trigger" href="#0">{{post.question}}</a>
-                                        <div class="cd-faq-content">
-                                            <p>{{post.answer}}</p>
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                {% endfor %}
-            </div>
-        </section>
-        <script src="js/jquery-2.1.1.js"></script>
-        <script src="js/jquery.mobile.custom.min.js"></script>
-        <script src="js/main.js"></script> <!-- Resource jQuery -->
-    </body>
-</html>
+        {% endfor %}
+    </div>
+</section>
+{% include 'footer.twig' %}
 

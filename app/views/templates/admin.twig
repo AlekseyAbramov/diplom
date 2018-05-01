@@ -1,64 +1,41 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Администрирование</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Compiled and minified CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-    </head>
-    <body>
-        <div class="container">
-            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin">Администраторы</a>
-            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/theme">Темы</a>
-            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/question">Вопросы</a>
-            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/exit">Выход</a>
-            <div class="row">
-                <h2>Управление администраторами сайта</h2>
-                <div class="col s3">
-                    <form method="POST">
-                        <input type="text" name="login" placeholder="Логин" value="" />
-                        <input type="text" name="password" placeholder="Пароль" value="" />
-                        <input type="submit" name="adminAdd" value="Добавить" />
-                    </form>
-                </div>
-                <div class="col s9">
-                    <table class="striped">
-                        <thead>
-                           <tr>
-                                <th>Логин</th>
-                                <th>Изменить пароль</th>
-                                <th>Удалить</th>
-                            </tr>
-                        </thead>
-                        {% for admin in users %}
-                        <tr>
-                            <td>{{ admin.login }}</td>
-                            <td>
-                                <form method="POST">
-                                    <input type="hidden" name="editPass_id" placeholder="" value="{{ admin.id }}" />
-                                    <input type="text" name="newPassword" placeholder="Пароль" value="" />
-                                    <input type="submit" name="passEdit" value="Изменить" />
-                                </form>
-                            </td>
-                            <td>
-                                <form method="POST">
-                                    <input type="hidden" name="dell_id" placeholder="" value="{{ admin.id }}" />
-                                    <input type="submit" name="dell" value="Удалить" />
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- Compiled and minified JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-    </body>
-</html>
+{% include 'adminMenu.twig' %}
+<div class="row">
+    <h2>Управление администраторами сайта</h2>
+    <div class="col s3">
+        <form method="POST">
+            <input type="text" name="login" placeholder="Логин" value="" />
+            <input type="password" name="password" placeholder="Пароль" value="" />
+            <input type="submit" name="adminAdd" value="Добавить" />
+        </form>
+    </div>
+    <div class="col s9">
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Логин</th>
+                    <th>Изменить пароль</th>
+                    <th>Удалить</th>
+                </tr>
+            </thead>
+            {% for admin in users %}
+                <tr>
+                    <td>{{ admin.login }}</td>
+                    <td>
+                        <form method="POST">
+                            <input type="hidden" name="editPass_id" placeholder="" value="{{ admin.id }}" />
+                            <input type="text" name="newPassword" placeholder="Пароль" value="" />
+                            <input type="submit" name="passEdit" value="Изменить" />
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST">
+                            <input type="hidden" name="dell_id" placeholder="" value="{{ admin.id }}" />
+                            <input type="submit" name="dell" value="Удалить" />
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% include 'adminFooter.twig' %}

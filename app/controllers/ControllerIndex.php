@@ -1,9 +1,10 @@
 <?php
 
+namespace diplomApp\controllers;
 class ControllerIndex extends \diplomApp\core\Controller {
-    public function actionIndex($db)
+    public function actionIndex($db, $dat)
     {
-        $this->view->generate($db, 'templateView.php');
+        echo $this->twig->render('template.twig', $dat);
     }
 }
 

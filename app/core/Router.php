@@ -21,35 +21,37 @@ class Router
         }
         
         // добавляем префиксы
-        $modelName = 'model'.$controllerName;
+        $modelName = 'Model'.$controllerName;
         $controllerName = 'Controller'.$controllerName;
+        $start = 'start'. $actionName;
         $actionName = 'action'.$actionName;
         
-        // подцепляем файл с классом модели (файла модели может и не быть)
-        $modelFile = strtolower($modelName).'.php';
-        $modelPath = dirname(__DIR__). DIRECTORY_SEPARATOR. 'models'. DIRECTORY_SEPARATOR. $modelFile;
-        if(file_exists($modelPath)) {
-            include $modelPath;
-            //echo 'Есть файл модели';
+        $modelClass = '\\diplomApp\\models\\'. $modelName;
+        if(class_exists($modelClass)) {
+            $model = new $modelClass();
+        }else {
+            throw new \Exception ('Отсутствует файл модели: `' . $modelName . '`');
         }
-        
-        // подцепляем файл с классом контроллера
-        $controllerFile = strtolower($controllerName).'.php';
-        $controllerPath = dirname(__DIR__). DIRECTORY_SEPARATOR. 'controllers'. DIRECTORY_SEPARATOR. $controllerFile;
-        if(file_exists($controllerPath)) {
-            include $controllerPath;
-            //echo 'есть файл контроллера';
-        } else {
-            throw new Exception ('Отсутствует файл контроллера: `' . $controllerFile . '`');
+
+        if (method_exists($model, $start)) {
+            $dat = $model->$start($db);
+        }else {
+            throw new \Exception ('Отсутствует действие модели: `' . $start . '`');
         }
         
         // создаем контроллер
-        $controller = new $controllerName();
+        $controllerClass = '\\diplomApp\\controllers\\'. $controllerName;
+        if(class_exists($controllerClass)) {
+            $controller = new $controllerClass();
+        } else {
+            throw new \Exception ('Отсутствует файл контроллера: `' . $controllerFile . '`');
+        }
+        //Проверяем экшен
         $action = $actionName;
         if(method_exists($controller, $action)) {
-            $controller->$action($db);
+            $controller->$action($db, $dat);
         } else {
-            throw new Exception ('Отсутствует действие '. $action. ' контроллера: `' . $controller . '`');
+            throw new \Exception ('Отсутствует действие '. $action. ' контроллера: `' . $controller . '`');
         }
     }
     

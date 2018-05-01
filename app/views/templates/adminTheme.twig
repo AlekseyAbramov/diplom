@@ -1,75 +1,51 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Администрирование</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Compiled and minified CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-    </head>
-    <body>
-        <div class="container">
-            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin">Администраторы</a>
-            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/theme">Темы</a>
-            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/question">Вопросы</a>
-            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/answer">Вопросы без ответа</a>
-            <a class="waves-effect waves-light btn-small" href="http://localhost/diplom/public/admin/exit">Выход</a>
-            <div class="row">
-                <h2>Управление Темами</h2>
-                <div class="col s3">
-                    <form method="POST">
-                        <input type="text" name="newTheme" placeholder="Тема" value="" />
-                        <input type="submit" name="themeAdd" value="Добавить" />
-                    </form>
-                </div>
-                <div class="col s9">
-                    <table class="striped">
-                        <thead>
-                           <tr>
-                                <th>Тема</th>
-                                <th>Всего вопросов</th>
-                                <th>Вопросов опубликованных</th>
-                                <th>Вопросов без ответа</th>
-                                <th>Удалить тему с вопросами</th>
-                            </tr>
-                        </thead>
-                        {% for theme in themes %}
-                        <tr>
-                            <td>{{theme.theme}}</td>
-                            {% for summ in sum %}
-                                {% if summ.id==theme.id %}
-                                    <td>{{summ.sum}}</td>
-                                {% endif %}
-                            {% endfor %}
-                            {% for summYes in sumYes %}
-                                {% if summYes.id==theme.id %}
-                                    <td>{{summYes.sum}}</td>
-                                {% endif %}
-                            {% endfor %}
-                            {% for summNo in sumNo %}
-                                {% if summNo.id==theme.id %}
-                                    <td>{{summNo.sum}}</td>
-                                {% endif %}
-                            {% endfor %}
-                            <td>
-                                <form method="POST">
-                                    <input type="hidden" name="theme_id" placeholder="" value="{{ theme.id }}" />
-                                    <input type="submit" name="themeDell" value="Удалить" />
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- Compiled and minified JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-    </body>
-</html>
+{% include 'adminMenu.twig' %}
+<div class="row">
+    <h2>Управление Темами</h2>
+    <div class="col s3">
+        <form method="POST">
+            <input type="text" name="newTheme" placeholder="Тема" value="" />
+            <input type="submit" name="themeAdd" value="Добавить" />
+        </form>
+    </div>
+    <div class="col s9">
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Тема</th>
+                    <th>Всего вопросов</th>
+                    <th>Вопросов опубликованных</th>
+                    <th>Вопросов без ответа</th>
+                    <th>Удалить тему с вопросами</th>
+                </tr>
+            </thead>
+            {% for theme in themes %}
+                <tr>
+                    <td>{{theme.theme}}</td>
+                    {% for summ in sum %}
+                        {% if summ.id==theme.id %}
+                            <td>{{summ.sum}}</td>
+                        {% endif %}
+                    {% endfor %}
+                    {% for summYes in sumYes %}
+                        {% if summYes.id==theme.id %}
+                            <td>{{summYes.sum}}</td>
+                        {% endif %}
+                    {% endfor %}
+                    {% for summNo in sumNo %}
+                        {% if summNo.id==theme.id %}
+                            <td>{{summNo.sum}}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>
+                        <form method="POST">
+                            <input type="hidden" name="theme_id" placeholder="" value="{{ theme.id }}" />
+                            <input type="submit" name="themeDell" value="Удалить" />
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% include 'adminFooter.twig' %}
 

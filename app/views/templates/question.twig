@@ -1,37 +1,21 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Задайте вопрос</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
-        <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
-        <script src="js/modernizr.js"></script> <!-- Modernizr -->
-    </head>
-    <body>
-        <header>
-            <h1>FAQ</h1>
-        </header>
-        <a href="http://localhost/diplom/public/User">Войти в панель администратора </a>
-        <section class="cd-faq">
-            <form method="POST">
-                <input type="text" name="name" placeholder="Имя" />
-                <input type="text" name="email" placeholder="e-mail" />
-                <label for="theme">Тема вопроса</label>
-                <select name="theme">
-                    {% for menu in menus %}
-                        <option value="{{menu}}">{{menu}}</option>
-                    {% endfor %}
-                </select>
-                <p><textarea name="text" cols="70" rows="4"></textarea></p>
-                <input type="submit" name="question_add" value="Отправить" />
-            </form>
-        </section>
-        <script src="js/jquery-2.1.1.js"></script>
-        <script src="js/jquery.mobile.custom.min.js"></script>
-        <script src="js/main.js"></script> <!-- Resource jQuery -->
-    </body>
-</html>
+{% include 'header.twig' %}
+<a href="/diplom/public/">Главная </a> <br>
+<a href="http://localhost/diplom/public/User">Войти в панель администратора </a>
+<section class="cd-faq">
+    <form method="POST">
+        <input type="text" name="name" placeholder="Имя" />
+        <input type="text" name="email" placeholder="e-mail" />
+        <label for="theme">Тема вопроса</label>
+        <select name="theme">
+            {% for menu in menus %}
+                <option value="{{menu}}">{{menu}}</option>
+            {% endfor %}
+        </select>
+        <p><textarea name="text" cols="70" rows="4"></textarea></p>
+        <input type="submit" name="question_add" value="Отправить" />
+    </form>
+</section>
+{% include 'footer.twig' %}
 
 

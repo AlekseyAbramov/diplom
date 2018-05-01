@@ -1,9 +1,10 @@
 <?php
 
+namespace diplomApp\controllers;
 class ControllerQuestion  extends \diplomApp\core\Controller {
-    public function actionIndex($db)
+    public function actionIndex($db, $dat)
     {
-        $this->view->generate($db, 'questionView.php');
+        echo $this->twig->render('question.twig', $dat);
     }
 }
 
