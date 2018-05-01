@@ -3,7 +3,13 @@
 $router = new \diplomApp\core\Router();
 
 //Подключаемся к базе данных
-$db = \diplomApp\classes\DataBase::connect();
+$config = new \diplomApp\Config();
+$db = \diplomApp\classes\DataBase::connect(
+        $config['mysql']['host'],
+        $config['mysql']['dbname'],
+        $config['mysql']['user'],
+        $config['mysql']['pass']
+);
 
 //Запускаем роутер
 $router->start($db);
