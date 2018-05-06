@@ -11,32 +11,32 @@ class Router
         $routes = explode('/', $_SERVER['REQUEST_URI']);
         
         if (!empty($routes[3])) {
-            $name = explode(".",$routes[3]);
+            $name = explode(".", $routes[3]);
             $controllerName = $name[0];
         }
         
         // получаем имя контроллера и экшена
-        if ( !empty($routes[4]) ) {
+        if (!empty($routes[4])) {
             $actionName = $routes[4];
         }
         
         // добавляем префиксы
-        $modelName = 'Model'.$controllerName;
-        $controllerName = 'Controller'.$controllerName;
+        $modelName = 'Model'. $controllerName;
+        $controllerName = 'Controller'. $controllerName;
         $start = 'start'. $actionName;
-        $actionName = 'action'.$actionName;
+        $actionName = 'action'. $actionName;
         
         $modelClass = '\\diplomApp\\models\\'. $modelName;
         if(class_exists($modelClass)) {
             $model = new $modelClass();
-        }else {
-            throw new \Exception ('Отсутствует файл модели: `' . $modelName . '`');
+        } else {
+            throw new \Exception ('Отсутствует файл модели: `'. $modelName. '`');
         }
 
         if (method_exists($model, $start)) {
             $dat = $model->$start($db);
-        }else {
-            throw new \Exception ('Отсутствует действие модели: `' . $start . '`');
+        } else {
+            throw new \Exception ('Отсутствует действие модели: `'. $start. '`');
         }
         
         // создаем контроллер
@@ -57,9 +57,9 @@ class Router
     
     public function errorPage404()
     {
-        $host = 'http://'.$_SERVER['HTTP_HOST'].'/';
+        $host = 'http://'. $_SERVER['HTTP_HOST']. '/';
         header('HTTP/1.1 404 Not Found');
         header("Status: 404 Not Found");
-        header('Location:'.$host.'404');
+        header('Location:'. $host. '404');
     }
 }
