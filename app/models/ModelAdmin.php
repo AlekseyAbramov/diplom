@@ -26,13 +26,10 @@ class ModelAdmin {
                 if($w) {
                     echo 'Такой пользователь уже есть. Введите другой логин.';
                 } else {
-                    $names = $user. ','. $password;
-                    $names = explode(',', $names);
-                    $placeholder = implode(',', array_fill(0, count($names), '?'));
-                    $sth = $db->prepare("INSERT INTO `users`(`login`, `password`) VALUES ($placeholder)");
+                    $names = [$user, $password];
+                    $sth = $db->prepare("INSERT INTO `users`(`login`, `password`) VALUES (?, ?)");
                     $sth->execute($names);
-                    echo 'Вы создали нового администратора';
-                    header("Location: ".$_SERVER['REQUEST_URI']);
+                    header("Location: " . $_SERVER['REQUEST_URI']);
                 }
             }
             if (!empty($_POST['login']) && empty($_POST['password'])) {

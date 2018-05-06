@@ -7,7 +7,6 @@ class Router
         // контроллер и действие по умолчанию
         $controllerName = 'Index';
         $actionName = 'Index';
-        
         $routes = explode('/', $_SERVER['REQUEST_URI']);
         
         if (!empty($routes[3])) {
@@ -21,45 +20,41 @@ class Router
         }
         
         // добавляем префиксы
-        $modelName = 'Model'. $controllerName;
-        $controllerName = 'Controller'. $controllerName;
-        $start = 'start'. $actionName;
-        $actionName = 'action'. $actionName;
+        $modelName = implode('', ['Model', $controllerName]);
+        $controllerName = implode('', ['Controller', $controllerName]);
+        $start = implode('', ['start', $actionName]);
+        $action = implode('', ['action', $actionName]);
         
-        $modelClass = '\\diplomApp\\models\\'. $modelName;
-        if(class_exists($modelClass)) {
-            $model = new $modelClass();
-        } else {
-            throw new \Exception ('Отсутствует файл модели: `'. $modelName. '`');
-        }
-
-        if (method_exists($model, $start)) {
-            $dat = $model->$start($db);
-        } else {
-            throw new \Exception ('Отсутствует действие модели: `'. $start. '`');
+        $modelClass = implode('\\', ['\diplomApp\models', $modelName]);
+        $controllerClass = implode('\\', ['\diplomApp\controllers', $controllerName]);
+        
+        if(!class_exists($modelClass)) {
+            throw new \Exception ('Отсутствует файл модели: `' . $modelName . '`');
         }
         
-        // создаем контроллер
-        $controllerClass = '\\diplomApp\\controllers\\'. $controllerName;
-        if(class_exists($controllerClass)) {
-            $controller = new $controllerClass();
-        } else {
-            throw new \Exception ('Отсутствует файл контроллера: `' . $controllerFile . '`');
+        if(!class_exists($controllerClass)) {
+            throw new \Exception ('Отсутствует файл контроллера: `' . $controllerName . '`');
         }
-        //Проверяем экшен
-        $action = $actionName;
-        if(method_exists($controller, $action)) {
-            $controller->$action($db, $dat);
-        } else {
-            throw new \Exception ('Отсутствует действие '. $action. ' контроллера: `' . $controller . '`');
+        
+        $model = new $modelClass;
+        if (!method_exists($model, $start)) {
+            throw new \Exception ('Отсутствует действие модели: `' . $start . '`');
         }
+        
+        $controller = new $controllerClass;
+        if(!method_exists($controller, $action)) {
+            throw new \Exception ('Отсутствует действие ' . $action . ' контроллера: `' . $controllerName . '`');
+        }
+        
+        $data = $model->$start($db);
+        $controller->$action($data);
     }
     
     public function errorPage404()
     {
-        $host = 'http://'. $_SERVER['HTTP_HOST']. '/';
+        $host = 'http://' . $_SERVER['HTTP_HOST'] . '/';
         header('HTTP/1.1 404 Not Found');
         header("Status: 404 Not Found");
-        header('Location:'. $host. '404');
+        header('Location:' . $host . '404');
     }
 }

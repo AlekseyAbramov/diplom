@@ -3,7 +3,8 @@
 $router = new \diplomApp\core\Router();
 
 //Подключаемся к базе данных
-$db = \diplomApp\classes\DataBase::connect();
+$config = new \diplomApp\classes\Config();
+$db = \diplomApp\classes\DataBase::connect($config);
 
 //Запускаем роутер
 $router->start($db);

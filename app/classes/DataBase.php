@@ -10,15 +10,10 @@ namespace diplomApp\classes;
      */
 class DataBase
 {
-    private static $host = 'localhost';
-    private static $dbname = 'diplom';
-    private static $user = 'root';
-    private static $pass = '';
-
-    public static function connect()
+    public static function connect($config)
     {
         try {
-            $db = new \PDO('mysql:host='. self::$host.';dbname='. self::$dbname.';charset=utf8', self::$user, self::$pass);
+            $db = new \PDO('mysql:host=' . $config::$host . ';dbname=' . $config::$dbname . ';charset=utf8', $config::$user, $config::$pass);
             } catch (PDOException $e) {
                 die('Database error: '.$e->getMessage().'<br/>');
             }
