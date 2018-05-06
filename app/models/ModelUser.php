@@ -28,7 +28,7 @@ class ModelUser {
                     if($w['login'] == $user && password_verify($password, $w['password'])) {
                         $_SESSION['user'] = $user;
                         $_SESSION['id'] = $w['id'];
-                        header("Location: http://". $_SERVER['SERVER_NAME']."/diplom/public/Admin");
+                        header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin");
                     } else {
                         echo 'Вы ввели не правильный пароль';
                     }

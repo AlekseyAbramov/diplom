@@ -22,8 +22,8 @@ class ModelIndex {
             }
         }
         
-        $dat = ['menus' => $menu,
+        $data = ['menus' => $menu,
                 'posts' => $post];
-        return $dat;
+        return $data;
     }
 }

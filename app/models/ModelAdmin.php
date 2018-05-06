@@ -7,7 +7,7 @@ class ModelAdmin {
     {
         session_start();
         if (empty($_SESSION['user'])) {
-            header("Location: http://". $_SERVER['SERVER_NAME']."/diplom/public");
+            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public");
             die();
         }
     }
@@ -43,13 +43,13 @@ class ModelAdmin {
             }
         }
                         
-        if (!empty($_POST['passEdit'])){
+        if (!empty($_POST['passEdit'])) {
             if (!empty($_POST['newPassword'])) {
                 $id = $_POST['editPass_id'];
                  $password[] = password_hash(strip_tags($_POST['newPassword']), PASSWORD_DEFAULT);
                 $sth = $db->prepare("UPDATE `users` SET `password`=? WHERE `id`=($id)");
                 $sth->execute($password);
-                header("Location: ".$_SERVER['REQUEST_URI']);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             }
         }
 
@@ -57,21 +57,19 @@ class ModelAdmin {
             $id = $_POST['dell_id'];
             $sth = $db->prepare("DELETE FROM `users` WHERE `id`=($id)");
             $sth->execute(array($id));
-            header("Location: ".$_SERVER['REQUEST_URI']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
         
         //Получаем список администраторов
         $dbUsers = new \diplomApp\classes\DbUser();
         $users = $dbUsers->getUsers($db);
-        $dat = ['users' => $users];
-        return $dat;
+        $data = ['users' => $users];
+        return $data;
     }
 
     static function startTheme($db)
     {
         self::logOn();
-        
-        //self::checkPost();
         
         if (!empty($_POST['themeAdd'])) {
             $newTheme = $_POST['newTheme'];
@@ -82,12 +80,11 @@ class ModelAdmin {
                 echo 'Такая тема уже есть. Введите другую.';
             } else {
                 if(strlen($newTheme) == 0){
-                    header("Location: ".$_SERVER['REQUEST_URI']);
+                    header("Location: " . $_SERVER['REQUEST_URI']);
                     die();
                 }
                 $sth = $db->prepare("INSERT INTO `themes`(`theme`) VALUES (?)");
                 $sth->execute(array($newTheme));
-                echo 'Вы создали новую тему';
                 header("Location: ".$_SERVER['REQUEST_URI']);
             }
         }
@@ -106,7 +103,7 @@ class ModelAdmin {
             $sth = $db->prepare("DELETE FROM `answers` WHERE question_id=?");
             if (!empty($questionId)) {
                 $sth->execute($questionId);//Удаляем ответы
-                header("Location: ".$_SERVER['REQUEST_URI']);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             }
         }
         
@@ -130,46 +127,42 @@ class ModelAdmin {
             $sumYes[$i]['sum'] = implode($sthYes->fetch(\PDO::FETCH_NUM));
             $i++;
         }
-        $dat = ['themes' => $themes,
+        $data = ['themes' => $themes,
                 'sum' => $sum,
                 'sumYes' => $sumYes,
                 'sumNo' => $sumNo];
-        return $dat;
+        return $data;
     }
     
     static function startQuestion($db)
     {
         self::logOn();
         
-        //self::checkPost();
-        
         if(!empty($_POST['question_select'])) {
             $_SESSION['theme_select'] = $_POST['theme_select'];
-            header("Location: http://".$_SERVER['SERVER_NAME']."/diplom/public/Admin/Select");
+            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/Select");
         }
         
         //Получаем список тем
         $dbThemes = new \diplomApp\classes\DbThemes();
         $themes = $dbThemes->getThemes($db);
-        $dat = ['themes' => $themes];
-        return $dat;
+        $data = ['themes' => $themes];
+        return $data;
     }
     
     static function startSelect($db)
     {
         self::logOn();
-
-        //self::checkPost();
         
         if (!empty($_POST['questionDell'])) {
             $questionIdDell = $_POST['guestion_id'];
             $sth = $db->prepare("DELETE FROM `questions` WHERE id=?");
             $sth->execute(array($questionIdDell));//Удаляем вопрос
-            header("Location: ".$_SERVER['REQUEST_URI']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
         if(!empty($_POST['questionEdit'])) {
             $_SESSION['question_edit'] = $_POST['guestion_id'];
-            header("Location: http://".$_SERVER['SERVER_NAME']."/diplom/public/Admin/Edit");
+            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/Edit");
         } 
         
         //Получаем список тем
@@ -193,30 +186,28 @@ class ModelAdmin {
             }
         }
         if(!empty($posts)) {
-            $dat = ['posts' => $posts,
+            $data = ['posts' => $posts,
                     'answers' => $answers,
                     'themes' => $themes];
-            return $dat;
+            return $data;
         } else {
-            header("Location: http://".$_SERVER['SERVER_NAME']."/diplom/public/Admin/Not");
+            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/Not");
         }
     }
     
     static function startAnswer($db) 
     {
         self::logOn();
- 
-        //self::checkPost();
         
         if (!empty($_POST['questionDell'])) {
             $questionIdDell = $_POST['guestion_id'];
             $sth = $db->prepare("DELETE FROM `questions` WHERE id=?");
             $sth->execute(array($questionIdDell));//Удаляем вопрос
-            header("Location: ".$_SERVER['REQUEST_URI']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
         if(!empty($_POST['questionEdit'])) {
             $_SESSION['question_edit'] = $_POST['guestion_id'];
-            header("Location: http://".$_SERVER['SERVER_NAME']."/diplom/public/Admin/Edit");
+            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/Edit");
         }
         
         //Получаем список тем
@@ -229,11 +220,11 @@ class ModelAdmin {
             $posts[] = $list;
         }
         if(!empty($posts)) {
-            $dat = ['posts' => $posts,
+            $data = ['posts' => $posts,
                     'themes' => $themes];
-            return $dat;
+            return $data;
         } else {
-            header("Location: http://".$_SERVER['SERVER_NAME']."/diplom/public/Admin/NoQuestion");
+            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/NoQuestion");
         }
     }
     
@@ -248,14 +239,14 @@ class ModelAdmin {
         
         if(!empty($_POST['question_select'])) {
             $_SESSION['theme_select'] = $_POST['theme_select'];
-            header("Location: http://".$_SERVER['SERVER_NAME']."/diplom/public/Admin/Select");
+            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/Select");
         }
         
         //Получаем список тем
         $dbThemes = new \diplomApp\classes\DbThemes();
         $themes = $dbThemes->getThemes($db);
-        $dat = ['themes' => $themes];
-        return $dat;
+        $data = ['themes' => $themes];
+        return $data;
         
     }
     
@@ -267,19 +258,19 @@ class ModelAdmin {
             $questionIdDell = $_POST['guestion_id'];
             $sth = $db->prepare("DELETE FROM `questions` WHERE id=?");
             $sth->execute(array($questionIdDell));//Удаляем вопрос
-            header("Location: ".$_SERVER['REQUEST_URI']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
         if (!empty($_POST['questionEditStatus'])) {
             $questionEditStatusId = $_POST['guestion_id'];
             if($_POST['guestion_status'] == '2') {
                 $sth = $db->prepare("UPDATE `questions` SET `status`=3 WHERE id=?");
                 $sth->execute(array($questionEditStatusId));
-                header("Location: ".$_SERVER['REQUEST_URI']);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             }
             if($_POST['guestion_status'] == '3') {
                 $sth = $db->prepare("UPDATE `questions` SET `status`=2 WHERE id=?");
                 $sth->execute(array($questionEditStatusId));
-                header("Location: ".$_SERVER['REQUEST_URI']);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             }
         }
         if (!empty($_POST['questionThemeEdit'])) {
@@ -287,15 +278,15 @@ class ModelAdmin {
             $themeEditId = $_POST['themeEdit'];
             $sth = $db->prepare("UPDATE `questions` SET `theme_id`='$themeEditId' WHERE id=?");
             $sth->execute(array($questionEditStatusId));
-            header("Location: ".$_SERVER['REQUEST_URI']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
-        if(!empty($_POST['answerEdit'])){
+        if(!empty($_POST['answerEdit'])) {
             $id = $_POST['question_id'];
             $text = trim($_POST['text']);
-            if(!empty($_POST['answer_id'])){
+            if(!empty($_POST['answer_id'])) {
                 $sth = $db->prepare("UPDATE `answers` SET `answer`='$text' WHERE question_id=?");
                 $sth->execute(array($id));
-                header("Location: ".$_SERVER['REQUEST_URI']);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             } else {
                 $data = array($id, $_SESSION['id'], $text);
                 $sth = $db->prepare("INSERT INTO `answers`(`question_id`, `admin_id`, `answer`) VALUES (?, ?, ?)");
@@ -305,7 +296,7 @@ class ModelAdmin {
                 $sth->execute(array($id));
                 $sth = $db->prepare("UPDATE `questions` SET `status`='2' WHERE id=?");
                 $sth->execute(array($id));
-                header("Location: ".$_SERVER['REQUEST_URI']);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             }
         }
         if (!empty($_POST['questionTextEdit'])) {
@@ -313,14 +304,14 @@ class ModelAdmin {
             $textEdit = trim($_POST['text']);
             $sth = $db->prepare("UPDATE `questions` SET `question`='$textEdit' WHERE id=?");
             $sth->execute(array($questionEditTextId));
-            header("Location: ".$_SERVER['REQUEST_URI']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
         if (!empty($_POST['guestionNameEdit'])) {
             $questionEditNameId = $_POST['question_id'];
             $nameEdit = trim($_POST['text']);
             $sth = $db->prepare("UPDATE `questions` SET `name`='$nameEdit' WHERE id=?");
             $sth->execute(array($questionEditNameId));
-            header("Location: ".$_SERVER['REQUEST_URI']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
             
         //Получаем вопрос и ответ для редактирования
@@ -341,19 +332,19 @@ class ModelAdmin {
             }
         }
         if(!empty($answer)) {
-            $dat = ['question' => $question,
+            $data = ['question' => $question,
                     'answer' => $answer,
                     'themes' => $themes];
-            return $dat;
+            return $data;
         } else {
-            $dat = ['question' => $question,
+            $data = ['question' => $question,
                     'themes' => $themes];
-            return $dat;
+            return $data;
         }
     }           
     
     public function startExit(){
-        header("Location: http://". $_SERVER['SERVER_NAME']."/diplom/public");
+        header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public");
     }
 }
 
