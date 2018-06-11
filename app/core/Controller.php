@@ -1,7 +1,9 @@
 <?php
 
 namespace diplomApp\core;
-class Controller {
+
+class Controller
+{
     public $twig;
     
     public function __construct()

@@ -2,7 +2,8 @@
 
 namespace diplomApp\models;
 
-class ModelIndex {
+class ModelIndex
+{
     static function startIndex($db)
     {
         //Получаем список тем для формирования меню

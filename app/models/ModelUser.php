@@ -1,7 +1,9 @@
 <?php
 
 namespace diplomApp\models;
-class ModelUser {
+
+class ModelUser
+{
     static function startIndex($db)
     {
         session_start();

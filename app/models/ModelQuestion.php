@@ -1,7 +1,9 @@
 <?php
 
 namespace diplomApp\models;
-class ModelQuestion {
+
+class ModelQuestion
+{
     static function startIndex($db)
     {
         if (!empty($_POST['question_add'])){

@@ -1,5 +1,7 @@
 <?php
+
 namespace diplomApp\core;
+
 class Router
 {
     static function start($db)

@@ -1,6 +1,7 @@
 <?php
 
 namespace diplomApp\core;
+
 class View
 {
     public function generate($db, $templateView)

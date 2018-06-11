@@ -1,7 +1,9 @@
 <?php
 
 namespace diplomApp\models;
-class ModelAdmin {
+
+class ModelAdmin
+{
 
     private function logOn()
     {

@@ -1,7 +1,9 @@
 <?php
 
 namespace diplomApp\controllers;
-class ControllerAdmin  extends \diplomApp\core\Controller {
+
+class ControllerAdmin  extends \diplomApp\core\Controller
+{
     public function actionIndex($data)
     {
         echo $this->twig->render('admin.twig', $data);

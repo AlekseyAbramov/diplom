@@ -1,7 +1,9 @@
 <?php
 
 namespace diplomApp\classes;
-class DbThemes {
+
+class DbThemes
+{
     public static function getThemes($db)
     {
         $sth = $db->query('SELECT * FROM `themes`');
