@@ -12,5 +12,5 @@ class DataBase
                 die('Database error: ' . $e->getMessage() . '<br/>');
             }
             return $db;
-        }
+    }
 }
