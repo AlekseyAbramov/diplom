@@ -39,17 +39,13 @@ class Router
         }
         
         $model = new $modelClass;
-        if (!method_exists($model, $start)) {
-            throw new \Exception ('Отсутствует действие модели: `' . $start . '`');
-        }
         
         $controller = new $controllerClass;
         if(!method_exists($controller, $action)) {
             throw new \Exception ('Отсутствует действие ' . $action . ' контроллера: `' . $controllerName . '`');
         }
         
-        $data = $model->$start($db);
-        $controller->$action($data);
+        $controller->$action($model, $start, $db);
     }
     
     public function errorPage404()

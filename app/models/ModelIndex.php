@@ -2,9 +2,14 @@
 
 namespace diplomApp\models;
 
-class ModelIndex
+class ModelIndex extends \diplomApp\core\Model
 {
-    static function startIndex($db)
+    public function startIndex($db)
+    {
+        
+    }
+    
+    public function getData($db)
     {
         //Получаем список тем для формирования меню
         $sth = $db->query('SELECT theme FROM themes');

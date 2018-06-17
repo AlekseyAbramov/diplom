@@ -14,7 +14,7 @@ class Controller
                                                       'auto_reload' => TRUE]);
     }
     
-    public function actionIndex($data)
+    public function actionIndex($model, $start, $db)
     {
     }
 }
