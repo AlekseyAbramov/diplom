@@ -11,17 +11,34 @@ class ModelAdmin extends \diplomApp\core\Model
     public function getData($db)
     {
         //Получаем список администраторов
-        $dbUsers = new \diplomApp\classes\DbUser();
+        $dbUsers = new \diplomApp\core\DbUser();
         $users = $dbUsers->getUsers($db);
         $data = ['users' => $users];
         return $data;
     }
     
+    private function getThemes($db)
+    {
+        $sth = $db->query('SELECT * FROM `themes`');
+        while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $themes[] = $list;
+        }
+        return $themes;
+    }
+    
+    private function getUsers($db)
+    {
+        $sth = $db->query('SELECT id, login FROM `users`');
+        while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
+            $users[] = $list;
+        }
+        return $users;
+    }
+
     public function getDataSumm($db)
     {
         //Получаем список тем
-        $dbThemes = new \diplomApp\classes\DbThemes();
-        $themes = $dbThemes->getThemes($db);
+        $themes = $this->getThemes($db);
         $i =0;
         foreach ($themes as $theme) {
             $id = $theme['id'];
@@ -49,8 +66,7 @@ class ModelAdmin extends \diplomApp\core\Model
     public function getDataThemes($db)
     {
         //Получаем список тем
-        $dbThemes = new \diplomApp\classes\DbThemes();
-        $themes = $dbThemes->getThemes($db);
+        $themes = $this->getThemes($db);
         $data = ['themes' => $themes];
         return $data;    
     }
@@ -58,8 +74,7 @@ class ModelAdmin extends \diplomApp\core\Model
     public function getDataAnswer($db)
     {
         //Получаем список тем
-        $dbThemes = new \diplomApp\classes\DbThemes();
-        $themes = $dbThemes->getThemes($db);
+        $themes = $this->getThemes($db);
 
         //Получаем список вопросов и ответов
         foreach ($themes as $theme) {
@@ -101,8 +116,7 @@ class ModelAdmin extends \diplomApp\core\Model
         $sthAnswer->execute(array($id));
         $answer = $sthAnswer->fetch(\PDO::FETCH_ASSOC);
         //Получаем список тем
-        $dbThemes = new \diplomApp\classes\DbThemes();
-        $themes = $dbThemes->getThemes($db);
+        $themes = $this->getThemes($db);
         //Находим тему вопроса
         foreach ($themes as $teme) {
             if($teme['id'] == $question['theme_id']) {
@@ -124,8 +138,7 @@ class ModelAdmin extends \diplomApp\core\Model
     public function getDataAnswerNo($db)
     {
     //Получаем список тем
-        $dbThemes = new \diplomApp\classes\DbThemes();
-        $themes = $dbThemes->getThemes($db);
+        $themes = $this->getThemes($db);
 
         //Получаем вопросы без ответа
         $sth = $db->query("SELECT id, question, date_add, status, theme_id FROM `questions` WHERE answer_id='$0' ORDER BY date_add");

@@ -1,6 +1,6 @@
 <?php
 
-namespace diplomApp\classes;
+namespace diplomApp\core;
 
 class DbUser
 {
