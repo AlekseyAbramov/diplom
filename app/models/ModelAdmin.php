@@ -10,9 +10,8 @@ class ModelAdmin extends \diplomApp\core\Model
 
     public function getData($db)
     {
-        //Получаем список администраторов
-        $dbUsers = new \diplomApp\core\DbUser();
-        $users = $dbUsers->getUsers($db);
+        //Получаем список администраторов;
+        $users = $this->getUsers($db);
         $data = ['users' => $users];
         return $data;
     }
