@@ -4,7 +4,7 @@ namespace diplomApp\controllers;
 
 class ControllerUser  extends \diplomApp\core\Controller
 {
-    public function actionIndex($model, $start, $db)
+    public function actionIndex($model, $start)
     {
         if(!empty($_POST['sign_in'])){
             if(!$_POST['login'] && !$_POST['password']) {
@@ -17,7 +17,7 @@ class ControllerUser  extends \diplomApp\core\Controller
                 echo 'Вы не ввели логин';
             }
             if($_POST['login'] && $_POST['password']) {
-                $model->$start($db);
+                $model->$start();
             }
         }
         echo $this->twig->render('login.twig');

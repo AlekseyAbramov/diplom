@@ -4,7 +4,7 @@ namespace diplomApp\core;
 
 class Router
 {
-    static function start($db)
+    static function start()
     {
         // контроллер и действие по умолчанию
         $controllerName = 'Index';
@@ -45,7 +45,7 @@ class Router
             throw new \Exception ('Отсутствует действие ' . $action . ' контроллера: `' . $controllerName . '`');
         }
         
-        $controller->$action($model, $start, $db);
+        $controller->$action($model, $start);
     }
     
     public function errorPage404()

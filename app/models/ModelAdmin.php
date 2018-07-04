@@ -4,20 +4,22 @@ namespace diplomApp\models;
 
 class ModelAdmin extends \diplomApp\core\Model
 {   
-    public function startIndex($db) {
+    public function startIndex() {
         
     }
 
-    public function getData($db)
+    public function getData()
     {
         //Получаем список администраторов;
-        $users = $this->getUsers($db);
+        $users = $this->getUsers();
         $data = ['users' => $users];
         return $data;
     }
     
-    private function getThemes($db)
+    private function getThemes()
     {
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->query('SELECT * FROM `themes`');
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $themes[] = $list;
@@ -25,8 +27,10 @@ class ModelAdmin extends \diplomApp\core\Model
         return $themes;
     }
     
-    private function getUsers($db)
+    private function getUsers()
     {
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->query('SELECT id, login FROM `users`');
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $users[] = $list;
@@ -34,11 +38,13 @@ class ModelAdmin extends \diplomApp\core\Model
         return $users;
     }
 
-    public function getDataSumm($db)
+    public function getDataSumm()
     {
         //Получаем список тем
-        $themes = $this->getThemes($db);
+        $themes = $this->getThemes();
         $i =0;
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         foreach ($themes as $theme) {
             $id = $theme['id'];
             $sth = $db->prepare("SELECT COUNT(*) FROM `questions` WHERE theme_id=?");
@@ -62,19 +68,20 @@ class ModelAdmin extends \diplomApp\core\Model
         return $data;
     }
     
-    public function getDataThemes($db)
+    public function getDataThemes()
     {
         //Получаем список тем
-        $themes = $this->getThemes($db);
+        $themes = $this->getThemes();
         $data = ['themes' => $themes];
         return $data;    
     }
     
-    public function getDataAnswer($db)
+    public function getDataAnswer()
     {
         //Получаем список тем
-        $themes = $this->getThemes($db);
-
+        $themes = $this->getThemes();
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         //Получаем список вопросов и ответов
         foreach ($themes as $theme) {
             if($theme['id'] == $_SESSION['theme_select']){
@@ -104,10 +111,12 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
     
-    public function getDataQuestion($db)
+    public function getDataQuestion()
     {
         //Получаем вопрос и ответ для редактирования
         $id = $_SESSION['question_edit'];
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("SELECT id, question, status, theme_id, name FROM `questions` WHERE id=?");
         $sth->execute(array($id));
         $question = $sth->fetch(\PDO::FETCH_ASSOC);
@@ -134,12 +143,14 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
     
-    public function getDataAnswerNo($db)
+    public function getDataAnswerNo()
     {
     //Получаем список тем
-        $themes = $this->getThemes($db);
+        $themes = $this->getThemes();
 
         //Получаем вопросы без ответа
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->query("SELECT id, question, date_add, status, theme_id FROM `questions` WHERE answer_id='$0' ORDER BY date_add");
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $posts[] = $list;
@@ -153,10 +164,12 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
 
-    public function adminAdd($db)
+    public function adminAdd()
     {
         $user = strip_tags($_POST['login']);
         $password = password_hash(strip_tags($_POST['password']), PASSWORD_DEFAULT);
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("SELECT `login` FROM `users` WHERE login=?");
         $sth->execute(array($user));
         $w = $sth->fetchColumn();
@@ -170,26 +183,32 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }    
     
-    public function passEdit($db)
+    public function passEdit()
     {
         $id = $_POST['editPass_id'];
         $password[] = password_hash(strip_tags($_POST['newPassword']), PASSWORD_DEFAULT);
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `users` SET `password`=? WHERE `id`=($id)");
         $sth->execute($password);
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function dell($db)
+    public function dell()
     {
         $id = $_POST['dell_id'];
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `users` WHERE `id`=($id)");
         $sth->execute(array($id));
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
 
-    public function themeAdd($db)
+    public function themeAdd()
     {
         $newTheme = $_POST['newTheme'];
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("SELECT `theme` FROM `themes` WHERE theme=?");
         $sth->execute(array($newTheme));
         $w = $sth->fetchColumn();
@@ -206,9 +225,11 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
     
-    public function themeDell($db)
+    public function themeDell()
     {
         $themeId = $_POST['theme_id'];
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `themes` WHERE id=?");
         $sth->execute(array($themeId));//Удаляем тему
         $sth = $db->prepare("SELECT `id` FROM `questions` WHERE theme_id=?");//Ищем ответы которые будем удалять
@@ -225,53 +246,65 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
     
-    public function questionDell($db)
+    public function questionDell()
     {
         $questionIdDell = $_POST['guestion_id'];
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `questions` WHERE id=?");
         $sth->execute(array($questionIdDell));//Удаляем вопрос
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function updateStatusUp($db)
+    public function updateStatusUp()
     {
         $questionEditStatusId = $_POST['guestion_id'];
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `status`=3 WHERE id=?");
         $sth->execute(array($questionEditStatusId));
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function updateStatusDown($db)
+    public function updateStatusDown()
     {
         $questionEditStatusId = $_POST['guestion_id'];
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `status`=2 WHERE id=?");
         $sth->execute(array($questionEditStatusId));
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function questionThemeEdit($db)
+    public function questionThemeEdit()
     {
         $questionEditStatusId = $_POST['guestion_id'];
         $themeEditId = $_POST['themeEdit'];
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `theme_id`='$themeEditId' WHERE id=?");
         $sth->execute(array($questionEditStatusId));
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function answerId($db)
+    public function answerId()
     {
         $id = $_POST['question_id'];
         $text = trim($_POST['text']);
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `answers` SET `answer`='$text' WHERE question_id=?");
         $sth->execute(array($id));
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function answerIdNo($db)
+    public function answerIdNo()
     {
         $id = $_POST['question_id'];
         $text = trim($_POST['text']);
         $data = array($id, $_SESSION['id'], $text);
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("INSERT INTO `answers`(`question_id`, `admin_id`, `answer`) VALUES (?, ?, ?)");
         $sth->execute($data);
         $newAnswerId = $db->lastInsertId();
@@ -282,19 +315,23 @@ class ModelAdmin extends \diplomApp\core\Model
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function questionTextEdit($db)
+    public function questionTextEdit()
     {
         $questionEditTextId = $_POST['question_id'];
         $textEdit = trim($_POST['text']);
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `question`='$textEdit' WHERE id=?");
         $sth->execute(array($questionEditTextId));
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function guestionNameEdit($db)
+    public function guestionNameEdit()
     {
         $questionEditNameId = $_POST['question_id'];
         $nameEdit = trim($_POST['text']);
+        $dbConnect = new \diplomApp\core\DataBase();
+        $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `name`='$nameEdit' WHERE id=?");
         $sth->execute(array($questionEditNameId));
         header("Location: " . $_SERVER['REQUEST_URI']);

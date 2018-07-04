@@ -4,12 +4,12 @@ namespace diplomApp\controllers;
 
 class ControllerQuestion  extends \diplomApp\core\Controller
 {
-    public function actionIndex($model, $start, $db)
+    public function actionIndex($model, $start)
     {
         if (!empty($_POST['question_add'])){
             if (!empty($_POST['name'])) {
                 if (!empty($_POST['email'])) {
-                    $model->$start($db);
+                    $model->$start();
                 } else {
                     echo 'Введите e-mail';
                 }
@@ -17,7 +17,7 @@ class ControllerQuestion  extends \diplomApp\core\Controller
                 echo 'Введите имя';
             }
         }
-        $data = $model->getData($db);
+        $data = $model->getData();
         echo $this->twig->render('question.twig', $data);
     }
 }

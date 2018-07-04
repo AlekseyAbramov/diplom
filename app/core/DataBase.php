@@ -4,13 +4,22 @@ namespace diplomApp\core;
 
 class DataBase
 {
-    public static function connect($config)
+    private static $db;
+
+    public static function connect()
     {
         try {
-            $db = new \PDO('mysql:host=' . $config["database"]["host"] . ';dbname=' . $config["database"]["dbname"] . ';charset=utf8', $config["database"]["login"], $config["database"]["pass"]);
-            } catch (\PDOException $e) {
+            $config = new \diplomApp\core\Config();
+            if (!self::$db) {
+                self::$db = new \PDO('mysql:host=' . $config->getConfig('host') . ';dbname=' . $config->getConfig('dbname') . ';charset=utf8', $config->getConfig('login'), $config->getConfig('pass'));
+            }
+        } catch (\PDOException $e) {
                 die('Database error: ' . $e->getMessage() . '<br/>');
             }
-            return $db;
+    }
+    
+    public function getDataBase()
+    {
+        return self::$db;
     }
 }
