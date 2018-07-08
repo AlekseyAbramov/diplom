@@ -20,4 +20,9 @@ class Config
     {
         return $this->values['database'][$key];
     }
+    
+    public function getServerName()
+    {
+        return $this->values['server']['host'];
+    }
 }

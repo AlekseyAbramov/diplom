@@ -4,6 +4,12 @@ namespace diplomApp\models;
 
 class ModelQuestion extends \diplomApp\core\Model
 {
+    private function getServerName()
+    {
+        $config = new \diplomApp\core\Config();
+        return $config->getServerName();
+    }
+    
     public function startIndex()
     {
         $theme = $_POST['theme'];
@@ -18,11 +24,11 @@ class ModelQuestion extends \diplomApp\core\Model
                 $themeId = $list['0'];
             }
         }
-        $sql = "INSERT INTO `questions`(`theme_id`, `question`, `name`, `mail`, `date_add`) VALUES (?,?,?,?,?)";
-        $dat = array($themeId, $text, $name, $mail, 'NOW()');
+        $sql = "INSERT INTO `questions`(`theme_id`, `question`, `name`, `mail`, `date_add`) VALUES (?,?,?,?,NOW())";
+        $dat = array($themeId, $text, $name, $mail);
         $st = $db->prepare($sql);
         $st->execute($dat);
-        header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Question");
+        header("Location: http://" . $this->getServerName() . "/diplom/public/Question");
     }
     
     public function getData()

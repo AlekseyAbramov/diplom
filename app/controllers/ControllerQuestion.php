@@ -18,7 +18,8 @@ class ControllerQuestion  extends \diplomApp\core\Controller
             }
         }
         $data = $model->getData();
-        echo $this->twig->render('question.twig', $data);
+        $view = new \diplomApp\core\View();
+        echo $view->getTwig()->render('question.twig', $data);
     }
 }
 

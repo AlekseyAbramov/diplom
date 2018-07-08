@@ -3,3 +3,5 @@ database:
     dbname: dbname
     login: login
     pass: password
+server:
+    host: localhost

@@ -6,10 +6,9 @@ class DataBase
 {
     private static $db;
 
-    public static function connect()
+    public static function connect($config)
     {
         try {
-            $config = new \diplomApp\core\Config();
             if (!self::$db) {
                 self::$db = new \PDO('mysql:host=' . $config->getConfig('host') . ';dbname=' . $config->getConfig('dbname') . ';charset=utf8', $config->getConfig('login'), $config->getConfig('pass'));
             }

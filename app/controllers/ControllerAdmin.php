@@ -4,11 +4,17 @@ namespace diplomApp\controllers;
 
 class ControllerAdmin  extends \diplomApp\core\Controller
 {
-    private function logOn()
+    private function getServerName()
+    {
+        $config = new \diplomApp\core\Config();
+        return $config->getServerName();
+    }
+
+        private function logOn()
     {
         session_start();
         if (empty($_SESSION['user'])) {
-            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public");
+            header("Location: http://" . self::getServerName() . "/diplom/public");
             die();
         }
     }
@@ -41,7 +47,8 @@ class ControllerAdmin  extends \diplomApp\core\Controller
             $model->dell();
         }
         $data = $model->getData();
-        echo $this->twig->render('admin.twig', $data);
+        $view = new \diplomApp\core\View();
+        echo $view->getTwig()->render('admin.twig', $data);
     }
     
     public function actionSelect($model, $start)
@@ -52,10 +59,11 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         }
         if(!empty($_POST['questionEdit'])) {
             $_SESSION['question_edit'] = $_POST['guestion_id'];
-            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/Edit");
+            header("Location: http://" . self::getServerName() . "/diplom/public/Admin/Edit");
         }
         $data = $model->getDataAnswer();
-        echo $this->twig->render('adminSelect.twig', $data);
+        $view = new \diplomApp\core\View();
+        echo $view->getTwig()->render('adminSelect.twig', $data);
     }
     
     public function actionNot($model, $start)
@@ -63,10 +71,11 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         self::logOn();
         if(!empty($_POST['question_select'])) {
             $_SESSION['theme_select'] = $_POST['theme_select'];
-            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/Select");
+            header("Location: http://" . self::getServerName() . "/diplom/public/Admin/Select");
         }
         $data = $model->getDataThemes();
-        echo $this->twig->render('adminNot.twig', $data);
+        $view = new \diplomApp\core\View();
+        echo $view->getTwig()->render('adminNot.twig', $data);
     }
     
     public function actionTheme($model, $start)
@@ -80,7 +89,8 @@ class ControllerAdmin  extends \diplomApp\core\Controller
             $model->themeDell();
         }
         $data = $model->getDataSumm();
-        echo $this->twig->render('adminTheme.twig', $data);
+        $view = new \diplomApp\core\View();
+        echo $view->getTwig()->render('adminTheme.twig', $data);
     }
     
     public function actionQuestion($model, $start)
@@ -88,10 +98,11 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         self::logOn();
         if(!empty($_POST['question_select'])) {
             $_SESSION['theme_select'] = $_POST['theme_select'];
-            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/Select");
+            header("Location: http://" . self::getServerName() . "/diplom/public/Admin/Select");
         }
         $data = $model->getDataThemes();
-        echo $this->twig->render('adminQuestion.twig', $data);
+        $view = new \diplomApp\core\View();
+        echo $view->getTwig()->render('adminQuestion.twig', $data);
     }
     
     public function actionEdit($model, $start)
@@ -125,7 +136,8 @@ class ControllerAdmin  extends \diplomApp\core\Controller
             $model->guestionNameEdit();
         }
         $data = $model->getDataQuestion();
-        echo $this->twig->render('adminEdit.twig', $data);
+        $view = new \diplomApp\core\View();
+        echo $view->getTwig()->render('adminEdit.twig', $data);
     }
     
     public function actionAnswer($model, $start)
@@ -136,21 +148,23 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         }
         if(!empty($_POST['questionEdit'])) {
             $_SESSION['question_edit'] = $_POST['guestion_id'];
-            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/Edit");
+            header("Location: http://" . self::getServerName() . "/diplom/public/Admin/Edit");
         }
         $data = $model->getDataAnswerNo();
-        echo $this->twig->render('adminAnswer.twig', $data);
+        $view = new \diplomApp\core\View();
+        echo $view->getTwig()->render('adminAnswer.twig', $data);
     }
     
     public function actionNoQuestion($model, $start)
     {
         self::logOn();
-        echo $this->twig->render('adminNoQuestion.twig');
+        $view = new \diplomApp\core\View();
+        echo $view->getTwig()->render('adminNoQuestion.twig');
     }
     public function actionExit($model, $start)
     {
         session_start();
         session_destroy();
-        header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public");
+        header("Location: http://" . self::getServerName() . "/diplom/public");
     }
 }

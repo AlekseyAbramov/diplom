@@ -3,7 +3,13 @@
 namespace diplomApp\models;
 
 class ModelAdmin extends \diplomApp\core\Model
-{   
+{
+    private function getServerName()
+    {
+        $config = new \diplomApp\core\Config();
+        return $config->getServerName();
+    }
+    
     public function startIndex() {
         
     }
@@ -107,7 +113,7 @@ class ModelAdmin extends \diplomApp\core\Model
                     'themes' => $themes];
             return $data;
         } else {
-            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/Not");
+            header("Location: http://" . $this->getServerName() . "/diplom/public/Admin/Not");
         }
     }
     
@@ -160,7 +166,7 @@ class ModelAdmin extends \diplomApp\core\Model
                     'themes' => $themes];
             return $data;
         } else {
-            header("Location: http://" . $_SERVER['SERVER_NAME'] . "/diplom/public/Admin/NoQuestion");
+            header("Location: http://" . $this->getServerName() . "/diplom/public/Admin/NoQuestion");
         }
     }
 

@@ -20,6 +20,7 @@ class ControllerUser  extends \diplomApp\core\Controller
                 $model->$start();
             }
         }
-        echo $this->twig->render('login.twig');
+        $view = new \diplomApp\core\View();
+        echo $view->getTwig()->render('login.twig');
     }
 }
