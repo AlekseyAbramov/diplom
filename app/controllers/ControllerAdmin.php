@@ -14,7 +14,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
     {
         session_start();
         if (empty($_SESSION['user'])) {
-            header("Location: http://" . self::getServerName() . "/diplom/public");
+            header("Location: http://" . self::getServerName());
             die();
         }
     }
@@ -59,7 +59,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         }
         if(!empty($_POST['questionEdit'])) {
             $_SESSION['question_edit'] = $_POST['guestion_id'];
-            header("Location: http://" . self::getServerName() . "/diplom/public/Admin/Edit");
+            header("Location: http://" . self::getServerName() . "/Admin/Edit");
         }
         $data = $model->getDataAnswer();
         $view = new \diplomApp\core\View();
@@ -71,7 +71,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         self::logOn();
         if(!empty($_POST['question_select'])) {
             $_SESSION['theme_select'] = $_POST['theme_select'];
-            header("Location: http://" . self::getServerName() . "/diplom/public/Admin/Select");
+            header("Location: http://" . self::getServerName() . "/Admin/Select");
         }
         $data = $model->getDataThemes();
         $view = new \diplomApp\core\View();
@@ -98,7 +98,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         self::logOn();
         if(!empty($_POST['question_select'])) {
             $_SESSION['theme_select'] = $_POST['theme_select'];
-            header("Location: http://" . self::getServerName() . "/diplom/public/Admin/Select");
+            header("Location: http://" . self::getServerName() . "/Admin/Select");
         }
         $data = $model->getDataThemes();
         $view = new \diplomApp\core\View();
@@ -148,7 +148,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         }
         if(!empty($_POST['questionEdit'])) {
             $_SESSION['question_edit'] = $_POST['guestion_id'];
-            header("Location: http://" . self::getServerName() . "/diplom/public/Admin/Edit");
+            header("Location: http://" . self::getServerName() . "/Admin/Edit");
         }
         $data = $model->getDataAnswerNo();
         $view = new \diplomApp\core\View();
@@ -165,6 +165,6 @@ class ControllerAdmin  extends \diplomApp\core\Controller
     {
         session_start();
         session_destroy();
-        header("Location: http://" . self::getServerName() . "/diplom/public");
+        header("Location: http://" . self::getServerName());
     }
 }

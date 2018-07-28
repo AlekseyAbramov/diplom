@@ -28,7 +28,7 @@ class ModelQuestion extends \diplomApp\core\Model
         $dat = array($themeId, $text, $name, $mail);
         $st = $db->prepare($sql);
         $st->execute($dat);
-        header("Location: http://" . $this->getServerName() . "/diplom/public/Question");
+        header("Location: http://" . $this->getServerName() . "/Question");
     }
     
     public function getData()

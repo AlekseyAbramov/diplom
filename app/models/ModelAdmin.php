@@ -113,7 +113,7 @@ class ModelAdmin extends \diplomApp\core\Model
                     'themes' => $themes];
             return $data;
         } else {
-            header("Location: http://" . $this->getServerName() . "/diplom/public/Admin/Not");
+            header("Location: http://" . $this->getServerName() . "/Admin/Not");
         }
     }
     
@@ -166,7 +166,7 @@ class ModelAdmin extends \diplomApp\core\Model
                     'themes' => $themes];
             return $data;
         } else {
-            header("Location: http://" . $this->getServerName() . "/diplom/public/Admin/NoQuestion");
+            header("Location: http://" . $this->getServerName() . "/Admin/NoQuestion");
         }
     }
 

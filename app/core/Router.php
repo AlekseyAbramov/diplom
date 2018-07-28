@@ -11,14 +11,14 @@ class Router
         $actionName = 'Index';
         $routes = explode('/', $_SERVER['REQUEST_URI']);
         
-        if (!empty($routes[3])) {
-            $name = explode(".", $routes[3]);
+        if (!empty($routes[1])) {
+            $name = explode(".", $routes[1]);
             $controllerName = $name[0];
         }
         
         // получаем имя контроллера и экшена
-        if (!empty($routes[4])) {
-            $actionName = $routes[4];
+        if (!empty($routes[2])) {
+            $actionName = $routes[2];
         }
         
         // добавляем префиксы

@@ -26,7 +26,7 @@ class ModelUser extends \diplomApp\core\Model
             if($w['login'] == $user && password_verify($password, $w['password'])) {
                 $_SESSION['user'] = $user;
                 $_SESSION['id'] = $w['id'];
-                header("Location: http://" . $this->getServerName() . "/diplom/public/Admin");
+                header("Location: http://" . $this->getServerName() . "/Admin");
             } else {
                 echo 'Вы ввели не правильный пароль';
             }
