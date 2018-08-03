@@ -4,6 +4,7 @@ namespace diplomApp\controllers;
 
 class ControllerQuestion  extends \diplomApp\core\Controller
 {
+    // @todo не используемая переменная $start
     public function actionIndex($model, $start)
     {
         if (!empty($_POST['question_add'])){
@@ -18,7 +19,7 @@ class ControllerQuestion  extends \diplomApp\core\Controller
             }
         }
         $data = $model->getData();
-        $view = new \diplomApp\core\View();
+        $view = new \diplomApp\core\View(); // перенести в свойство и передавать через конструктор
         echo $view->getTwig()->render('question.twig', $data);
     }
 }

@@ -13,7 +13,8 @@ class View
         $this->twig = new \Twig_Environment($loader, ['cache' => $dir . 'tmp',
                                                       'auto_reload' => TRUE]);
     }
-    
+
+    // @todo не используется переменная $db
     public function generate($db, $templateView)
     {
         include dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $templateView;

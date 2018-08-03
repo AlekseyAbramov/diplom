@@ -4,6 +4,7 @@ namespace diplomApp\models;
 
 class ModelIndex extends \diplomApp\core\Model
 {
+    // @todo не используется
     public function startIndex()
     {
         
@@ -12,7 +13,7 @@ class ModelIndex extends \diplomApp\core\Model
     public function getData()
     {
         //Получаем список тем для формирования меню
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->query('SELECT theme FROM themes');
         while ($list = $sth->fetch(\PDO::FETCH_NUM)) {
@@ -29,7 +30,8 @@ class ModelIndex extends \diplomApp\core\Model
                 $post[$thema][] = $list;
             }
         }
-        
+
+        // @todo в начале нужно $post переменную объявить как пустой массив
         $data = ['menus' => $menu,
                 'posts' => $post];
         return $data;

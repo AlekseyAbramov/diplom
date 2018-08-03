@@ -4,6 +4,8 @@ namespace diplomApp\controllers;
 
 class ControllerUser  extends \diplomApp\core\Controller
 {
+    // @todo не используемая переменная $start
+    // @todo дублирование логики с \diplomApp\controllers\ControllerAdmin::actionIndex
     public function actionIndex($model, $start)
     {
         if(!empty($_POST['sign_in'])){
@@ -20,7 +22,7 @@ class ControllerUser  extends \diplomApp\core\Controller
                 $model->$start();
             }
         }
-        $view = new \diplomApp\core\View();
+        $view = new \diplomApp\core\View(); // @todo перенести в свойство и передавать через конструктор
         echo $view->getTwig()->render('login.twig');
     }
 }
