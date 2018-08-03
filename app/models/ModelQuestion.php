@@ -16,7 +16,7 @@ class ModelQuestion extends \diplomApp\core\Model
         $text = $_POST['text'];
         $name = $_POST['name'];
         $mail = $_POST['email'];
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->query('SELECT * FROM themes');
         while ($list = $sth->fetch(\PDO::FETCH_NUM)) {
@@ -28,18 +28,21 @@ class ModelQuestion extends \diplomApp\core\Model
         $dat = array($themeId, $text, $name, $mail);
         $st = $db->prepare($sql);
         $st->execute($dat);
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: http://" . $this->getServerName() . "/Question");
     }
     
     public function getData()
     {
         //Получаем список тем для формирования меню
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->query('SELECT theme FROM themes');
         while ($list = $sth->fetch(\PDO::FETCH_NUM)) {
             $menu[] = implode($list);
         }
+        // @todo в начале нужно $menu переменную объявить как пустой массив
         $data = ['menus' => $menu];
         return $data;
     }

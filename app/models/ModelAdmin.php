@@ -6,10 +6,11 @@ class ModelAdmin extends \diplomApp\core\Model
 {
     private function getServerName()
     {
-        $config = new \diplomApp\core\Config();
+        $config = new \diplomApp\core\Config(); // @todo перенести в свойство и передавать через конструктор
         return $config->getServerName();
     }
-    
+
+    // @todo не используется
     public function startIndex() {
         
     }
@@ -24,23 +25,25 @@ class ModelAdmin extends \diplomApp\core\Model
     
     private function getThemes()
     {
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->query('SELECT * FROM `themes`');
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $themes[] = $list;
         }
+        // @todo в начале нужно эту переменную объявить как пустой массив
         return $themes;
     }
     
     private function getUsers()
     {
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->query('SELECT id, login FROM `users`');
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $users[] = $list;
         }
+        // @todo в начале нужно эту переменную объявить как пустой массив
         return $users;
     }
 
@@ -49,7 +52,7 @@ class ModelAdmin extends \diplomApp\core\Model
         //Получаем список тем
         $themes = $this->getThemes();
         $i =0;
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         foreach ($themes as $theme) {
             $id = $theme['id'];
@@ -67,6 +70,7 @@ class ModelAdmin extends \diplomApp\core\Model
             $sumYes[$i]['sum'] = implode($sthYes->fetch(\PDO::FETCH_NUM));
             $i++;
         }
+        // @todo в начале нужно эти переменные объявить $sum, $sumYes, $sumNo
         $data = ['themes' => $themes,
                 'sum' => $sum,
                 'sumYes' => $sumYes,
@@ -86,7 +90,7 @@ class ModelAdmin extends \diplomApp\core\Model
     {
         //Получаем список тем
         $themes = $this->getThemes();
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         //Получаем список вопросов и ответов
         foreach ($themes as $theme) {
@@ -113,6 +117,8 @@ class ModelAdmin extends \diplomApp\core\Model
                     'themes' => $themes];
             return $data;
         } else {
+            // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+            //выбрасывать Exception если ошибка, а в контроллере обрабатывать
             header("Location: http://" . $this->getServerName() . "/Admin/Not");
         }
     }
@@ -121,7 +127,7 @@ class ModelAdmin extends \diplomApp\core\Model
     {
         //Получаем вопрос и ответ для редактирования
         $id = $_SESSION['question_edit'];
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("SELECT id, question, status, theme_id, name FROM `questions` WHERE id=?");
         $sth->execute(array($id));
@@ -155,7 +161,7 @@ class ModelAdmin extends \diplomApp\core\Model
         $themes = $this->getThemes();
 
         //Получаем вопросы без ответа
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->query("SELECT id, question, date_add, status, theme_id FROM `questions` WHERE answer_id='$0' ORDER BY date_add");
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
@@ -166,6 +172,8 @@ class ModelAdmin extends \diplomApp\core\Model
                     'themes' => $themes];
             return $data;
         } else {
+            // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+            //выбрасывать Exception если ошибка, а в контроллере обрабатывать
             header("Location: http://" . $this->getServerName() . "/Admin/NoQuestion");
         }
     }
@@ -174,7 +182,7 @@ class ModelAdmin extends \diplomApp\core\Model
     {
         $user = strip_tags($_POST['login']);
         $password = password_hash(strip_tags($_POST['password']), PASSWORD_DEFAULT);
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("SELECT `login` FROM `users` WHERE login=?");
         $sth->execute(array($user));
@@ -185,6 +193,8 @@ class ModelAdmin extends \diplomApp\core\Model
             $names = [$user, $password];
             $sth = $db->prepare("INSERT INTO `users`(`login`, `password`) VALUES (?, ?)");
             $sth->execute($names);
+            // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+            //выбрасывать Exception если ошибка, а в контроллере обрабатывать
             header("Location: " . $_SERVER['REQUEST_URI']);
         }
     }    
@@ -193,27 +203,31 @@ class ModelAdmin extends \diplomApp\core\Model
     {
         $id = $_POST['editPass_id'];
         $password[] = password_hash(strip_tags($_POST['newPassword']), PASSWORD_DEFAULT);
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `users` SET `password`=? WHERE `id`=($id)");
         $sth->execute($password);
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
     public function dell()
     {
         $id = $_POST['dell_id'];
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `users` WHERE `id`=($id)");
         $sth->execute(array($id));
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
 
     public function themeAdd()
     {
         $newTheme = $_POST['newTheme'];
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("SELECT `theme` FROM `themes` WHERE theme=?");
         $sth->execute(array($newTheme));
@@ -222,11 +236,16 @@ class ModelAdmin extends \diplomApp\core\Model
             echo 'Такая тема уже есть. Введите другую.';
         } else {
             if(strlen($newTheme) == 0){
+                // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+                //выбрасывать Exception если ошибка, а в контроллере обрабатывать
                 header("Location: " . $_SERVER['REQUEST_URI']);
+                // @todo тем более die() убрать
                 die();
             }
             $sth = $db->prepare("INSERT INTO `themes`(`theme`) VALUES (?)");
             $sth->execute(array($newTheme));
+            // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+            //выбрасывать Exception если ошибка, а в контроллере обрабатывать
             header("Location: ".$_SERVER['REQUEST_URI']);
         }
     }
@@ -234,7 +253,7 @@ class ModelAdmin extends \diplomApp\core\Model
     public function themeDell()
     {
         $themeId = $_POST['theme_id'];
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `themes` WHERE id=?");
         $sth->execute(array($themeId));//Удаляем тему
@@ -248,6 +267,8 @@ class ModelAdmin extends \diplomApp\core\Model
         $sthh = $db->prepare("DELETE FROM `answers` WHERE question_id=?");
         if (!empty($questionId)) {
             $sthh->execute($questionId);//Удаляем ответы
+            // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+            //выбрасывать Exception если ошибка, а в контроллере обрабатывать
             header("Location: " . $_SERVER['REQUEST_URI']);
         }
     }
@@ -255,30 +276,36 @@ class ModelAdmin extends \diplomApp\core\Model
     public function questionDell()
     {
         $questionIdDell = $_POST['guestion_id'];
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `questions` WHERE id=?");
         $sth->execute(array($questionIdDell));//Удаляем вопрос
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
     public function updateStatusUp()
     {
         $questionEditStatusId = $_POST['guestion_id'];
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `status`=3 WHERE id=?");
         $sth->execute(array($questionEditStatusId));
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
     public function updateStatusDown()
     {
         $questionEditStatusId = $_POST['guestion_id'];
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `status`=2 WHERE id=?");
         $sth->execute(array($questionEditStatusId));
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
@@ -286,10 +313,12 @@ class ModelAdmin extends \diplomApp\core\Model
     {
         $questionEditStatusId = $_POST['guestion_id'];
         $themeEditId = $_POST['themeEdit'];
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `theme_id`='$themeEditId' WHERE id=?");
         $sth->execute(array($questionEditStatusId));
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
@@ -297,10 +326,12 @@ class ModelAdmin extends \diplomApp\core\Model
     {
         $id = $_POST['question_id'];
         $text = trim($_POST['text']);
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `answers` SET `answer`='$text' WHERE question_id=?");
         $sth->execute(array($id));
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
@@ -309,7 +340,7 @@ class ModelAdmin extends \diplomApp\core\Model
         $id = $_POST['question_id'];
         $text = trim($_POST['text']);
         $data = array($id, $_SESSION['id'], $text);
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("INSERT INTO `answers`(`question_id`, `admin_id`, `answer`) VALUES (?, ?, ?)");
         $sth->execute($data);
@@ -318,6 +349,8 @@ class ModelAdmin extends \diplomApp\core\Model
         $sth->execute(array($id));
         $sth = $db->prepare("UPDATE `questions` SET `status`='2' WHERE id=?");
         $sth->execute(array($id));
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
@@ -325,10 +358,12 @@ class ModelAdmin extends \diplomApp\core\Model
     {
         $questionEditTextId = $_POST['question_id'];
         $textEdit = trim($_POST['text']);
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `question`='$textEdit' WHERE id=?");
         $sth->execute(array($questionEditTextId));
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
@@ -336,10 +371,12 @@ class ModelAdmin extends \diplomApp\core\Model
     {
         $questionEditNameId = $_POST['question_id'];
         $nameEdit = trim($_POST['text']);
-        $dbConnect = new \diplomApp\core\DataBase();
+        $dbConnect = new \diplomApp\core\DataBase(); // @todo перенести в свойство и передавать через конструктор
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `name`='$nameEdit' WHERE id=?");
         $sth->execute(array($questionEditNameId));
+        // @todo в моделе не должно быть редиректов. Переделать на возврат данных 
+        //выбрасывать Exception если ошибка, а в контроллере обрабатывать
         header("Location: " . $_SERVER['REQUEST_URI']);
     }           
 }
