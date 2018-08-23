@@ -18,7 +18,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
             die();
         }
     }
-    
+
     public function actionIndex($model, $start)
     {
         self::logOn();
@@ -36,7 +36,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
                 echo 'Вы не ввели логин и пароль';
             }
         }
-                        
+
         if (!empty($_POST['passEdit'])) {
             if (!empty($_POST['newPassword'])) {
                 $model->passEdit();
@@ -50,7 +50,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         $view = new \diplomApp\core\View();
         echo $view->getTwig()->render('admin.twig', $data);
     }
-    
+
     public function actionSelect($model, $start)
     {
         self::logOn();
@@ -65,7 +65,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         $view = new \diplomApp\core\View();
         echo $view->getTwig()->render('adminSelect.twig', $data);
     }
-    
+
     public function actionNot($model, $start)
     {
         self::logOn();
@@ -77,14 +77,14 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         $view = new \diplomApp\core\View();
         echo $view->getTwig()->render('adminNot.twig', $data);
     }
-    
+
     public function actionTheme($model, $start)
     {
         self::logOn();
         if (!empty($_POST['themeAdd'])) {
             $model->themeAdd();
         }
-    
+
         if (!empty($_POST['themeDell'])) {
             $model->themeDell();
         }
@@ -92,7 +92,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         $view = new \diplomApp\core\View();
         echo $view->getTwig()->render('adminTheme.twig', $data);
     }
-    
+
     public function actionQuestion($model, $start)
     {
         self::logOn();
@@ -104,7 +104,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         $view = new \diplomApp\core\View();
         echo $view->getTwig()->render('adminQuestion.twig', $data);
     }
-    
+
     public function actionEdit($model, $start)
     {
         self::logOn();
@@ -139,7 +139,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         $view = new \diplomApp\core\View();
         echo $view->getTwig()->render('adminEdit.twig', $data);
     }
-    
+
     public function actionAnswer($model, $start)
     {
         self::logOn();
@@ -154,7 +154,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         $view = new \diplomApp\core\View();
         echo $view->getTwig()->render('adminAnswer.twig', $data);
     }
-    
+
     public function actionNoQuestion($model, $start)
     {
         self::logOn();
