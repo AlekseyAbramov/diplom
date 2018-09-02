@@ -7,4 +7,4 @@ $config = new \diplomApp\core\Config();
 $dbConnect = new \diplomApp\core\DataBase();
 $dbConnect::connect($config);
 //Запускаем роутер
-$router->start();
+$router->start($dbConnect);

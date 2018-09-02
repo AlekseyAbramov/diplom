@@ -4,7 +4,15 @@ namespace diplomApp\core;
 
 abstract class Model
 {
-    abstract function startIndex();
+    public function selectAllThemes($dbConnect)
+    {
+        $db = $dbConnect->getDataBase();
+        return $sth = $db->query('SELECT * FROM `themes`');
+    }
     
-    abstract function getData();
+    public function selectThemes($dbConnect)
+    {
+        $db = $dbConnect->getDataBase();
+        return $sth = $db->query('SELECT theme FROM themes');
+    }
 }

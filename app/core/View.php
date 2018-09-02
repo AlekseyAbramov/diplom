@@ -14,7 +14,7 @@ class View
                                                       'auto_reload' => TRUE]);
     }
     
-    public function generate($db, $templateView)
+    public function generate($templateView)
     {
         include dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $templateView;
     }

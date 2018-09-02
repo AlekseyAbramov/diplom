@@ -4,23 +4,17 @@ namespace diplomApp\controllers;
 
 class ControllerUser  extends \diplomApp\core\Controller
 {
-    public function actionIndex($model, $start)
+    public function actionIndex($model, $view, $dbConnect)
     {
         if(!empty($_POST['sign_in'])){
-            if(!$_POST['login'] && !$_POST['password']) {
-                echo 'Вы не ввели логин и пароль';
-            }
-            if($_POST['login'] && !$_POST['password']) {
-                echo 'Вы не ввели пароль';
-            }
-            if(!$_POST['login'] && $_POST['password']) {
-                echo 'Вы не ввели логин';
-            }
-            if($_POST['login'] && $_POST['password']) {
-                $model->$start();
+            try {
+                parent::userControl();
+                $model->startIndex($dbConnect);
+                header("Location: http://" . self::getServerName() . "/Admin");
+            } catch (\Exception $ex) {
+                echo $ex->getMessage();
             }
         }
-        $view = new \diplomApp\core\View();
         echo $view->getTwig()->render('login.twig');
     }
 }

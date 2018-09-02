@@ -4,10 +4,9 @@ namespace diplomApp\controllers;
 
 class ControllerIndex extends \diplomApp\core\Controller
 {
-    public function actionIndex($model, $start)
+    public function actionIndex($model, $view, $dbConnect)
     {
-        $data = $model->getData();
-        $view = new \diplomApp\core\View();
+        $data = $model->getData($dbConnect);
         echo $view->getTwig()->render('template.twig', $data);
     }
 }

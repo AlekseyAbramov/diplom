@@ -4,7 +4,7 @@ namespace diplomApp\core;
 
 class Router
 {
-    static function start()
+    static function start($dbConnect)
     {
         // контроллер и действие по умолчанию
         $controllerName = 'Index';
@@ -24,7 +24,6 @@ class Router
         // добавляем префиксы
         $modelName = implode('', ['Model', $controllerName]);
         $controllerName = implode('', ['Controller', $controllerName]);
-        $start = implode('', ['start', $actionName]);
         $action = implode('', ['action', $actionName]);
         
         $modelClass = implode('\\', ['\diplomApp\models', $modelName]);
@@ -39,13 +38,14 @@ class Router
         }
         
         $model = new $modelClass;
+        $view = new \diplomApp\core\View();
         
         $controller = new $controllerClass;
         if(!method_exists($controller, $action)) {
             throw new \Exception ('Отсутствует действие ' . $action . ' контроллера: `' . $controllerName . '`');
         }
         
-        $controller->$action($model, $start);
+        $controller->$action($model, $view, $dbConnect);
     }
     
     public function errorPage404()

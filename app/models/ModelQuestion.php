@@ -3,22 +3,14 @@
 namespace diplomApp\models;
 
 class ModelQuestion extends \diplomApp\core\Model
-{
-    private function getServerName()
-    {
-        $config = new \diplomApp\core\Config();
-        return $config->getServerName();
-    }
-    
-    public function startIndex()
+{    
+    public function startIndex($dbConnect)
     {
         $theme = $_POST['theme'];
         $text = $_POST['text'];
         $name = $_POST['name'];
         $mail = $_POST['email'];
-        $dbConnect = new \diplomApp\core\DataBase();
-        $db = $dbConnect->getDataBase();
-        $sth = $db->query('SELECT * FROM themes');
+        $sth = parent::selectAllThemes($dbConnect);
         while ($list = $sth->fetch(\PDO::FETCH_NUM)) {
             if ($list['1'] == $theme) {
                 $themeId = $list['0'];
@@ -26,17 +18,16 @@ class ModelQuestion extends \diplomApp\core\Model
         }
         $sql = "INSERT INTO `questions`(`theme_id`, `question`, `name`, `mail`, `date_add`) VALUES (?,?,?,?,NOW())";
         $dat = array($themeId, $text, $name, $mail);
+        $db = $dbConnect->getDataBase();
         $st = $db->prepare($sql);
         $st->execute($dat);
-        header("Location: http://" . $this->getServerName() . "/Question");
     }
     
-    public function getData()
+    public function getData($dbConnect)
     {
         //Получаем список тем для формирования меню
-        $dbConnect = new \diplomApp\core\DataBase();
-        $db = $dbConnect->getDataBase();
-        $sth = $db->query('SELECT theme FROM themes');
+        $sth = parent::selectThemes($dbConnect);
+        $menu = [];
         while ($list = $sth->fetch(\PDO::FETCH_NUM)) {
             $menu[] = implode($list);
         }

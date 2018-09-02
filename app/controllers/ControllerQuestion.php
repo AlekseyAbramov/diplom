@@ -4,21 +4,28 @@ namespace diplomApp\controllers;
 
 class ControllerQuestion  extends \diplomApp\core\Controller
 {
-    public function actionIndex($model, $start)
+    private function controlQuestion()
+    {
+        if (empty($_POST['name'])) {
+            throw new \Exception('Введите имя');
+        }
+        if (empty($_POST['email'])) {
+            throw new \Exception('Введите e-mail');
+        }
+    }
+
+    public function actionIndex($model, $view, $dbConnect)
     {
         if (!empty($_POST['question_add'])){
-            if (!empty($_POST['name'])) {
-                if (!empty($_POST['email'])) {
-                    $model->$start();
-                } else {
-                    echo 'Введите e-mail';
-                }
-            } else {
-                echo 'Введите имя';
+            try {
+                self::controlQuestion();
+                $model->startIndex($dbConnect);
+                header("Location: http://" . self::getServerName() . "/Question");
+            } catch (\Exception $ex) {
+                echo $ex->getMessage();
             }
         }
-        $data = $model->getData();
-        $view = new \diplomApp\core\View();
+        $data = $model->getData($dbConnect);
         echo $view->getTwig()->render('question.twig', $data);
     }
 }

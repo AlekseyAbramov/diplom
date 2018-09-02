@@ -4,167 +4,176 @@ namespace diplomApp\controllers;
 
 class ControllerAdmin  extends \diplomApp\core\Controller
 {
-    private function getServerName()
-    {
-        $config = new \diplomApp\core\Config();
-        return $config->getServerName();
-    }
-
-        private function logOn()
+    private function logOn()
     {
         session_start();
         if (empty($_SESSION['user'])) {
-            header("Location: http://" . self::getServerName());
+            header("Location: http://" . parent::getServerName());
             die();
         }
     }
     
-    public function actionIndex($model, $start)
+    public function actionIndex($model, $view, $dbConnect)
     {
-        self::logOn();
         if (!empty($_POST['adminAdd'])) {
-            if (!empty($_POST['login']) && !empty($_POST['password'])) {
-                $model->adminAdd();
-            }
-            if (!empty($_POST['login']) && empty($_POST['password'])) {
-                echo 'Вы на ввели пароль';
-            }
-            if (empty($_POST['login']) && !empty($_POST['password'])) {
-                echo 'Вы не ввели логин';
-            }
-            if (empty($_POST['login']) && empty($_POST['password'])) {
-                echo 'Вы не ввели логин и пароль';
+            self::logOn();
+            try {
+                parent::userControl();
+                $model->adminAdd($dbConnect);
+                header("Location: " . $_SERVER['REQUEST_URI']);
+            } catch (\Exception $ex) {
+                echo $ex->getMessage();
             }
         }
                         
         if (!empty($_POST['passEdit'])) {
             if (!empty($_POST['newPassword'])) {
-                $model->passEdit();
+                $model->passEdit($dbConnect);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             }
         }
 
         if (!empty($_POST['dell'])) {
-            $model->dell();
+            $model->dell($dbConnect);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
-        $data = $model->getData();
-        $view = new \diplomApp\core\View();
+        $data = $model->getData($dbConnect);
         echo $view->getTwig()->render('admin.twig', $data);
     }
     
-    public function actionSelect($model, $start)
+    public function actionSelect($model, $view, $dbConnect)
     {
         self::logOn();
         if (!empty($_POST['questionDell'])) {
-            $model->questionDell();
+            $model->questionDell($dbConnect);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
         if(!empty($_POST['questionEdit'])) {
             $_SESSION['question_edit'] = $_POST['guestion_id'];
-            header("Location: http://" . self::getServerName() . "/Admin/Edit");
+            header("Location: http://" . parent::getServerName() . "/Admin/Edit");
         }
-        $data = $model->getDataAnswer();
-        $view = new \diplomApp\core\View();
-        echo $view->getTwig()->render('adminSelect.twig', $data);
+        try {
+            $data = $model->getDataAnswer($dbConnect);
+            echo $view->getTwig()->render('adminSelect.twig', $data);
+        } catch (\Exception $ex) {
+            header("Location: http://" . parent::getServerName() . "/Admin/Not");
+        }
     }
     
-    public function actionNot($model, $start)
+    public function actionNot($model, $view, $dbConnect)
     {
         self::logOn();
         if(!empty($_POST['question_select'])) {
             $_SESSION['theme_select'] = $_POST['theme_select'];
-            header("Location: http://" . self::getServerName() . "/Admin/Select");
+            header("Location: http://" . parent::getServerName() . "/Admin/Select");
         }
-        $data = $model->getDataThemes();
-        $view = new \diplomApp\core\View();
+        $data = $model->getDataThemes($dbConnect);
         echo $view->getTwig()->render('adminNot.twig', $data);
     }
     
-    public function actionTheme($model, $start)
+    public function actionTheme($model, $view, $dbConnect)
     {
         self::logOn();
         if (!empty($_POST['themeAdd'])) {
-            $model->themeAdd();
+            try {
+                $model->themeAdd($dbConnect);
+                header("Location: ".$_SERVER['REQUEST_URI']);
+            } catch (\Exception $ex) {
+                echo $ex->getMessage();
+            }
         }
     
         if (!empty($_POST['themeDell'])) {
-            $model->themeDell();
+            $model->themeDell($dbConnect);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
-        $data = $model->getDataSumm();
-        $view = new \diplomApp\core\View();
+        $data = $model->getDataSumm($dbConnect);
         echo $view->getTwig()->render('adminTheme.twig', $data);
     }
     
-    public function actionQuestion($model, $start)
+    public function actionQuestion($model, $view, $dbConnect)
     {
         self::logOn();
         if(!empty($_POST['question_select'])) {
             $_SESSION['theme_select'] = $_POST['theme_select'];
-            header("Location: http://" . self::getServerName() . "/Admin/Select");
+            header("Location: http://" . parent::getServerName() . "/Admin/Select");
         }
-        $data = $model->getDataThemes();
-        $view = new \diplomApp\core\View();
+        $data = $model->getDataThemes($dbConnect);
         echo $view->getTwig()->render('adminQuestion.twig', $data);
     }
     
-    public function actionEdit($model, $start)
+    public function actionEdit($model, $view, $dbConnect)
     {
         self::logOn();
         if (!empty($_POST['questionEditDell'])) {
-            $model->questionDell();
+            $model->questionDell($dbConnect);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
         if (!empty($_POST['questionEditStatus'])) {
             if($_POST['guestion_status'] == '2') {
-                $model->updateStatusUp();
+                $model->updateStatusUp($dbConnect);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             }
             if($_POST['guestion_status'] == '3') {
-                $model->updateStatusDown();
+                $model->updateStatusDown($dbConnect);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             }
         }
         if (!empty($_POST['questionThemeEdit'])) {
-            $model->questionThemeEdit();
+            $model->questionThemeEdit($dbConnect);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
         if(!empty($_POST['answerEdit'])) {
             if(!empty($_POST['answer_id'])) {
-                $model->answerId();
+                $model->answerId($dbConnect);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             } else {
-                $model->answerIdNo();
+                $model->answerIdNo($dbConnect);
+                header("Location: " . $_SERVER['REQUEST_URI']);
             }
         }
         if (!empty($_POST['questionTextEdit'])) {
-            $model->questionTextEdit();
+            $model->questionTextEdit($dbConnect);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
         if (!empty($_POST['guestionNameEdit'])) {
-            $model->guestionNameEdit();
+            $model->guestionNameEdit($dbConnect);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
-        $data = $model->getDataQuestion();
-        $view = new \diplomApp\core\View();
+        $data = $model->getDataQuestion($dbConnect);
         echo $view->getTwig()->render('adminEdit.twig', $data);
     }
     
-    public function actionAnswer($model, $start)
+    public function actionAnswer($model, $view, $dbConnect)
     {
         self::logOn();
         if (!empty($_POST['questionDell'])) {
-            $model->questionDell();
+            $model->questionDell($dbConnect);
+            header("Location: " . $_SERVER['REQUEST_URI']);
         }
         if(!empty($_POST['questionEdit'])) {
             $_SESSION['question_edit'] = $_POST['guestion_id'];
-            header("Location: http://" . self::getServerName() . "/Admin/Edit");
+            header("Location: http://" . parent::getServerName() . "/Admin/Edit");
         }
-        $data = $model->getDataAnswerNo();
-        $view = new \diplomApp\core\View();
-        echo $view->getTwig()->render('adminAnswer.twig', $data);
+        try {
+            $data = $model->getDataAnswerNo($dbConnect);
+            echo $view->getTwig()->render('adminAnswer.twig', $data);
+        } catch (\Exception $ex) {
+            echo '';
+            header("Location: http://" . parent::getServerName() . "/Admin/NoQuestion");
+        }
     }
     
-    public function actionNoQuestion($model, $start)
+    public function actionNoQuestion($model, $view, $dbConnect)
     {
         self::logOn();
-        $view = new \diplomApp\core\View();
         echo $view->getTwig()->render('adminNoQuestion.twig');
     }
-    public function actionExit($model, $start)
+    
+    public function actionExit($model, $view, $dbConnect)
     {
         session_start();
         session_destroy();
-        header("Location: http://" . self::getServerName());
+        header("Location: http://" . parent::getServerName());
     }
 }

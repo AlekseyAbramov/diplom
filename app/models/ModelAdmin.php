@@ -4,53 +4,44 @@ namespace diplomApp\models;
 
 class ModelAdmin extends \diplomApp\core\Model
 {
-    private function getServerName()
+    public function getThemes($dbConnect)
     {
-        $config = new \diplomApp\core\Config();
-        return $config->getServerName();
-    }
-    
-    public function startIndex() {
-        
-    }
-
-    public function getData()
-    {
-        //Получаем список администраторов;
-        $users = $this->getUsers();
-        $data = ['users' => $users];
-        return $data;
-    }
-    
-    private function getThemes()
-    {
-        $dbConnect = new \diplomApp\core\DataBase();
-        $db = $dbConnect->getDataBase();
-        $sth = $db->query('SELECT * FROM `themes`');
+        $sth = parent::selectAllThemes($dbConnect);
+        $themes = [];
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $themes[] = $list;
         }
         return $themes;
     }
     
-    private function getUsers()
+    public function getData($dbConnect)
     {
-        $dbConnect = new \diplomApp\core\DataBase();
+        //Получаем список администраторов;
+        $users = $this->getUsers($dbConnect);
+        $data = ['users' => $users];
+        return $data;
+    }
+    
+    private function getUsers($dbConnect)
+    {
         $db = $dbConnect->getDataBase();
         $sth = $db->query('SELECT id, login FROM `users`');
+        $users = [];
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $users[] = $list;
         }
         return $users;
     }
 
-    public function getDataSumm()
+    public function getDataSumm($dbConnect)
     {
         //Получаем список тем
-        $themes = $this->getThemes();
+        $themes = $this->getThemes($dbConnect);
         $i =0;
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
+        $sum = [];//Общее количество вопросов
+        $sumNo = [];//Вопросы без ответа
+        $sumYes = [];//Вопросы с ответами
         foreach ($themes as $theme) {
             $id = $theme['id'];
             $sth = $db->prepare("SELECT COUNT(*) FROM `questions` WHERE theme_id=?");
@@ -74,19 +65,18 @@ class ModelAdmin extends \diplomApp\core\Model
         return $data;
     }
     
-    public function getDataThemes()
+    public function getDataThemes($dbConnect)
     {
         //Получаем список тем
-        $themes = $this->getThemes();
+        $themes = $this->getThemes($dbConnect);
         $data = ['themes' => $themes];
         return $data;    
     }
     
-    public function getDataAnswer()
+    public function getDataAnswer($dbConnect)
     {
         //Получаем список тем
-        $themes = $this->getThemes();
-        $dbConnect = new \diplomApp\core\DataBase();
+        $themes = $this->getThemes($dbConnect);
         $db = $dbConnect->getDataBase();
         //Получаем список вопросов и ответов
         foreach ($themes as $theme) {
@@ -113,15 +103,14 @@ class ModelAdmin extends \diplomApp\core\Model
                     'themes' => $themes];
             return $data;
         } else {
-            header("Location: http://" . $this->getServerName() . "/Admin/Not");
+            throw new \Exception('Нет данных');
         }
     }
     
-    public function getDataQuestion()
+    public function getDataQuestion($dbConnect)
     {
         //Получаем вопрос и ответ для редактирования
         $id = $_SESSION['question_edit'];
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("SELECT id, question, status, theme_id, name FROM `questions` WHERE id=?");
         $sth->execute(array($id));
@@ -130,7 +119,7 @@ class ModelAdmin extends \diplomApp\core\Model
         $sthAnswer->execute(array($id));
         $answer = $sthAnswer->fetch(\PDO::FETCH_ASSOC);
         //Получаем список тем
-        $themes = $this->getThemes($db);
+        $themes = $this->getThemes($dbConnect);
         //Находим тему вопроса
         foreach ($themes as $teme) {
             if($teme['id'] == $question['theme_id']) {
@@ -149,13 +138,12 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
     
-    public function getDataAnswerNo()
+    public function getDataAnswerNo($dbConnect)
     {
     //Получаем список тем
-        $themes = $this->getThemes();
+        $themes = $this->getThemes($dbConnect);
 
         //Получаем вопросы без ответа
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->query("SELECT id, question, date_add, status, theme_id FROM `questions` WHERE answer_id='$0' ORDER BY date_add");
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
@@ -166,75 +154,65 @@ class ModelAdmin extends \diplomApp\core\Model
                     'themes' => $themes];
             return $data;
         } else {
-            header("Location: http://" . $this->getServerName() . "/Admin/NoQuestion");
+            throw new \Exception('Нет данных');
         }
     }
 
-    public function adminAdd()
+    public function adminAdd($dbConnect)
     {
         $user = strip_tags($_POST['login']);
         $password = password_hash(strip_tags($_POST['password']), PASSWORD_DEFAULT);
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("SELECT `login` FROM `users` WHERE login=?");
         $sth->execute(array($user));
         $w = $sth->fetchColumn();
         if($w) {
-            echo 'Такой пользователь уже есть. Введите другой логин.';
+            throw new \Exception('Такой пользователь уже есть. Введите другой логин.');
         } else {
             $names = [$user, $password];
             $sth = $db->prepare("INSERT INTO `users`(`login`, `password`) VALUES (?, ?)");
             $sth->execute($names);
-            header("Location: " . $_SERVER['REQUEST_URI']);
         }
     }    
     
-    public function passEdit()
+    public function passEdit($dbConnect)
     {
         $id = $_POST['editPass_id'];
         $password[] = password_hash(strip_tags($_POST['newPassword']), PASSWORD_DEFAULT);
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `users` SET `password`=? WHERE `id`=($id)");
         $sth->execute($password);
-        header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function dell()
+    public function dell($dbConnect)
     {
         $id = $_POST['dell_id'];
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `users` WHERE `id`=($id)");
         $sth->execute(array($id));
-        header("Location: " . $_SERVER['REQUEST_URI']);
     }
 
-    public function themeAdd()
+    public function themeAdd($dbConnect)
     {
         $newTheme = $_POST['newTheme'];
-        $dbConnect = new \diplomApp\core\DataBase();
+        if(strlen($newTheme) == 0){
+            throw new \Exception('Тема не задана');
+        }
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("SELECT `theme` FROM `themes` WHERE theme=?");
         $sth->execute(array($newTheme));
         $w = $sth->fetchColumn();
         if($w) {
-            echo 'Такая тема уже есть. Введите другую.';
+            throw new \Exception('Такая тема уже есть. Введите другую.');
         } else {
-            if(strlen($newTheme) == 0){
-                header("Location: " . $_SERVER['REQUEST_URI']);
-                die();
-            }
             $sth = $db->prepare("INSERT INTO `themes`(`theme`) VALUES (?)");
             $sth->execute(array($newTheme));
-            header("Location: ".$_SERVER['REQUEST_URI']);
         }
     }
     
-    public function themeDell()
+    public function themeDell($dbConnect)
     {
         $themeId = $_POST['theme_id'];
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `themes` WHERE id=?");
         $sth->execute(array($themeId));//Удаляем тему
@@ -248,68 +226,56 @@ class ModelAdmin extends \diplomApp\core\Model
         $sthh = $db->prepare("DELETE FROM `answers` WHERE question_id=?");
         if (!empty($questionId)) {
             $sthh->execute($questionId);//Удаляем ответы
-            header("Location: " . $_SERVER['REQUEST_URI']);
         }
     }
     
-    public function questionDell()
+    public function questionDell($dbConnect)
     {
         $questionIdDell = $_POST['guestion_id'];
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `questions` WHERE id=?");
         $sth->execute(array($questionIdDell));//Удаляем вопрос
-        header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function updateStatusUp()
+    public function updateStatusUp($dbConnect)
     {
         $questionEditStatusId = $_POST['guestion_id'];
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `status`=3 WHERE id=?");
         $sth->execute(array($questionEditStatusId));
-        header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function updateStatusDown()
+    public function updateStatusDown($dbConnect)
     {
         $questionEditStatusId = $_POST['guestion_id'];
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `status`=2 WHERE id=?");
         $sth->execute(array($questionEditStatusId));
-        header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function questionThemeEdit()
+    public function questionThemeEdit($dbConnect)
     {
         $questionEditStatusId = $_POST['guestion_id'];
         $themeEditId = $_POST['themeEdit'];
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `theme_id`='$themeEditId' WHERE id=?");
         $sth->execute(array($questionEditStatusId));
-        header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function answerId()
+    public function answerId($dbConnect)
     {
         $id = $_POST['question_id'];
         $text = trim($_POST['text']);
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `answers` SET `answer`='$text' WHERE question_id=?");
         $sth->execute(array($id));
-        header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function answerIdNo()
+    public function answerIdNo($dbConnect)
     {
         $id = $_POST['question_id'];
         $text = trim($_POST['text']);
         $data = array($id, $_SESSION['id'], $text);
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("INSERT INTO `answers`(`question_id`, `admin_id`, `answer`) VALUES (?, ?, ?)");
         $sth->execute($data);
@@ -318,29 +284,24 @@ class ModelAdmin extends \diplomApp\core\Model
         $sth->execute(array($id));
         $sth = $db->prepare("UPDATE `questions` SET `status`='2' WHERE id=?");
         $sth->execute(array($id));
-        header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function questionTextEdit()
+    public function questionTextEdit($dbConnect)
     {
         $questionEditTextId = $_POST['question_id'];
         $textEdit = trim($_POST['text']);
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `question`='$textEdit' WHERE id=?");
         $sth->execute(array($questionEditTextId));
-        header("Location: " . $_SERVER['REQUEST_URI']);
     }
     
-    public function guestionNameEdit()
+    public function guestionNameEdit($dbConnect)
     {
         $questionEditNameId = $_POST['question_id'];
         $nameEdit = trim($_POST['text']);
-        $dbConnect = new \diplomApp\core\DataBase();
         $db = $dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `name`='$nameEdit' WHERE id=?");
         $sth->execute(array($questionEditNameId));
-        header("Location: " . $_SERVER['REQUEST_URI']);
     }           
 }
 

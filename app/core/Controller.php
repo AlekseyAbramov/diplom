@@ -4,6 +4,25 @@ namespace diplomApp\core;
 
 abstract class Controller
 {
-    abstract function actionIndex($model, $start);
+    public function userControl()
+    {
+        if(!$_POST['login'] && !$_POST['password']) {
+            throw new \Exception('Вы не ввели логин и пароль');
+        }
+        if($_POST['login'] && !$_POST['password']) {
+            throw new \Exception('Вы не ввели пароль');
+        }
+        if(!$_POST['login'] && $_POST['password']) {
+            throw new \Exception('Вы не ввели логин');
+        }
+    }
+
+    public function getServerName()
+    {
+        $config = new \diplomApp\core\Config();
+        return $config->getServerName();
+    }
+    
+    abstract function actionIndex($model, $view, $dbConnect);
 }
 
