@@ -25,7 +25,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
                 echo $ex->getMessage();
             }
         }
-                        
+
         if (!empty($_POST['passEdit'])) {
             if (!empty($_POST['newPassword'])) {
                 $model->passEdit($dbConnect);
@@ -82,7 +82,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
                 echo $ex->getMessage();
             }
         }
-    
+
         if (!empty($_POST['themeDell'])) {
             $model->themeDell($dbConnect);
             header("Location: " . $_SERVER['REQUEST_URI']);
