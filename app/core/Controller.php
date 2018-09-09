@@ -19,6 +19,8 @@ abstract class Controller
 
     public function getServerName()
     {
+        // @todo может положить в свойство, что бы не создовать каждый раз при вызове метода?
+        // конфиг уже создается в файле start.php
         $config = new \diplomApp\core\Config();
         return $config->getServerName();
     }
