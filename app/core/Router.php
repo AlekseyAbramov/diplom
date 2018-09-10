@@ -4,6 +4,7 @@ namespace diplomApp\core;
 
 class Router
 {
+    // @todo может $dbConnect через конструктор класть в свойство?
     static function start($dbConnect)
     {
         // контроллер и действие по умолчанию

@@ -3,7 +3,8 @@
 namespace diplomApp\models;
 
 class ModelUser extends \diplomApp\core\Model
-{    
+{
+    // @todo может $dbConnect через конструктор класть в свойство?
     public function startIndex($dbConnect)
     {
         session_start();
