@@ -4,13 +4,12 @@ namespace diplomApp\models;
 
 class ModelUser extends \diplomApp\core\Model
 {
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function startIndex($dbConnect)
+    public function startIndex()
     {
         session_start();
         $user = strip_tags($_POST['login']);
         $password = $_POST['password'];
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("SELECT `id`, `login`, `password` FROM `users` WHERE login=?");
         $sth->execute(array($user));
         $w = $sth->fetch();

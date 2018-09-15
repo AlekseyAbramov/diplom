@@ -14,22 +14,20 @@ class ControllerQuestion  extends \diplomApp\core\Controller
         }
     }
 
-    // @todo может $view правильнее присваивать в свойство например в конструкторе?
-    public function actionIndex($model, $view, $dbConnect)
+    public function actionIndex()
     {
         if (!empty($_POST['question_add'])){
             try {
-                // @todo обращаться надо через $this
-                self::controlQuestion();
-                $model->startIndex($dbConnect);
-                // @todo может вынести в родительский метод например $this->redirectTo()
-                header("Location: http://" . self::getServerName() . "/Question");
+                $this->controlQuestion();
+                $this->model->startIndex();
+                $page = '/Question';
+                $this->redirectTo($page);
             } catch (\Exception $ex) {
                 echo $ex->getMessage();
             }
         }
-        $data = $model->getData($dbConnect);
-        echo $view->getTwig()->render('question.twig', $data);
+        $data = $this->model->getData();
+        echo $this->view->getTwig()->render('question.twig', $data);
     }
 }
 

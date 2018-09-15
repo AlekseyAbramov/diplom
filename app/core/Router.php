@@ -4,8 +4,15 @@ namespace diplomApp\core;
 
 class Router
 {
-    // @todo может $dbConnect через конструктор класть в свойство?
-    static function start($dbConnect)
+    protected $dbConnect, $config;
+    
+    public function __construct($dbConnect, $config)
+    {
+        $this->dbConnect = $dbConnect;
+        $this->config = $config;
+    }
+
+    public function start()
     {
         // контроллер и действие по умолчанию
         $controllerName = 'Index';
@@ -38,15 +45,15 @@ class Router
             throw new \Exception ('Отсутствует файл контроллера: `' . $controllerName . '`');
         }
         
-        $model = new $modelClass;
+        $model = new $modelClass($this->dbConnect);
         $view = new \diplomApp\core\View();
         
-        $controller = new $controllerClass;
+        $controller = new $controllerClass($this->config, $view, $model);
         if(!method_exists($controller, $action)) {
             throw new \Exception ('Отсутствует действие ' . $action . ' контроллера: `' . $controllerName . '`');
         }
         
-        $controller->$action($model, $view, $dbConnect);
+        $controller->$action();
     }
     
     public function errorPage404()

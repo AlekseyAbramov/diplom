@@ -4,17 +4,18 @@ namespace diplomApp\controllers;
 
 class ControllerUser  extends \diplomApp\core\Controller
 {
-    public function actionIndex($model, $view, $dbConnect)
+    public function actionIndex()
     {
         if(!empty($_POST['sign_in'])){
             try {
                 parent::userControl();
-                $model->startIndex($dbConnect);
-                header("Location: http://" . self::getServerName() . "/Admin");
+                $this->model->startIndex();
+                $page = '/Admin';
+               $this->redirectTo($page);
             } catch (\Exception $ex) {
                 echo $ex->getMessage();
             }
         }
-        echo $view->getTwig()->render('login.twig');
+        echo $this->view->getTwig()->render('login.twig');
     }
 }

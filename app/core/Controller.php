@@ -4,6 +4,20 @@ namespace diplomApp\core;
 
 abstract class Controller
 {
+    protected $config, $view, $model, $protocol;
+    
+    public function __construct($config, $view, $model)
+    {
+        $this->config = $config;
+        $this->view = $view;
+        $this->model = $model;
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+            $this->protocol = 'https://';
+        } else {
+            $this->protocol = 'http://';
+        }
+    }
+
     public function userControl()
     {
         if(!$_POST['login'] && !$_POST['password']) {
@@ -19,12 +33,28 @@ abstract class Controller
 
     public function getServerName()
     {
-        // @todo может положить в свойство, что бы не создовать каждый раз при вызове метода?
-        // конфиг уже создается в файле start.php
-        $config = new \diplomApp\core\Config();
-        return $config->getServerName();
+        return $this->config->getServerName();
     }
     
-    abstract function actionIndex($model, $view, $dbConnect);
+    public function redirect()
+    {
+        header('Location: ' . $this->protocol . $this->getServerName() . $_SERVER['REQUEST_URI']);
+    }
+    
+    public function redirectTo($page)
+    {
+        header('Location: ' . $this->protocol . $this->getServerName() . $page);
+    }
+    
+    public function logOn()
+    {
+        session_start();
+        if (empty($_SESSION['user'])) {
+            $this->redirectTo();
+            die();
+        }
+    }
+
+    abstract function actionIndex();
 }
 

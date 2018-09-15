@@ -4,31 +4,15 @@ namespace diplomApp\controllers;
 
 class ControllerAdmin  extends \diplomApp\core\Controller
 {
-    // @todo может этот метод в конструктор, раз он используется везде?
-    private function logOn()
-    {
-        session_start();
-        if (empty($_SESSION['user'])) {
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            // и надо вместо parent использовать $this->getServerName();
-            // и протокол лучше не хардкодить, а брать из переменной $_SERVER
-            header("Location: http://" . parent::getServerName());
-            die();
-        }
-    }
 
-    // @todo может $model, $view и $dbConnect правильнее присваивать в свойство например в конструкторе?
-    public function actionIndex($model, $view, $dbConnect)
+    public function actionIndex()
     {
         if (!empty($_POST['adminAdd'])) {
-            // @todo обращаться надо через $this
-            self::logOn();
+            $this->logOn();
             try {
-                // @todo обращаться надо через $this
-                parent::userControl();
-                $model->adminAdd($dbConnect);
-                // @todo может вынести в родительский метод например $this->redirectTo()
-                header("Location: " . $_SERVER['REQUEST_URI']);
+                $this->userControl();
+                $this->model->adminAdd();
+                $this->redirect();
             } catch (\Exception $ex) {
                 echo $ex->getMessage();
             }
@@ -36,188 +20,158 @@ class ControllerAdmin  extends \diplomApp\core\Controller
 
         if (!empty($_POST['passEdit'])) {
             if (!empty($_POST['newPassword'])) {
-                $model->passEdit($dbConnect);
-                // @todo может вынести в родительский метод например $this->redirectTo()
-                header("Location: " . $_SERVER['REQUEST_URI']);
+                $this->model->passEdit();
+                $this->redirect();
             }
         }
 
         if (!empty($_POST['dell'])) {
-            $model->dell($dbConnect);
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            $this->model->dell();
+            $this->redirect();
         }
-        $data = $model->getData($dbConnect);
-        echo $view->getTwig()->render('admin.twig', $data);
+        $data = $this->model->getData();
+        echo $this->view->getTwig()->render('admin.twig', $data);
     }
 
-    // @todo может $model, $view и $dbConnect правильнее присваивать в свойство например в конструкторе?
-    public function actionSelect($model, $view, $dbConnect)
+    public function actionSelect()
     {
-        // @todo обращаться надо через $this
-        self::logOn();
+        $this->logOn();
         if (!empty($_POST['questionDell'])) {
-            $model->questionDell($dbConnect);
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            $this->model->questionDell();
+            $this->redirect();
         }
         if(!empty($_POST['questionEdit'])) {
             $_SESSION['question_edit'] = $_POST['guestion_id'];
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: http://" . parent::getServerName() . "/Admin/Edit");
+            $page = '/Admin/Edit';
+            $this->redirectTo($page);
         }
         try {
-            $data = $model->getDataAnswer($dbConnect);
-            echo $view->getTwig()->render('adminSelect.twig', $data);
+            $data = $this->model->getDataAnswer();
+            echo $this->view->getTwig()->render('adminSelect.twig', $data);
         } catch (\Exception $ex) {
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: http://" . parent::getServerName() . "/Admin/Not");
+            $page = '/Admin/Not';
+            $this->redirectTo($page);
         }
     }
 
-    // @todo может $model, $view и $dbConnect правильнее присваивать в свойство например в конструкторе?
-    public function actionNot($model, $view, $dbConnect)
+    public function actionNot()
     {
-        // @todo обращаться надо через $this
-        self::logOn();
+        $this->logOn();
         if(!empty($_POST['question_select'])) {
             $_SESSION['theme_select'] = $_POST['theme_select'];
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: http://" . parent::getServerName() . "/Admin/Select");
+            $page = '/Admin/Select';
+            $this->redirectTo($page);
         }
-        $data = $model->getDataThemes($dbConnect);
-        echo $view->getTwig()->render('adminNot.twig', $data);
+        $data = $this->model->getDataThemes();
+        echo $this->view->getTwig()->render('adminNot.twig', $data);
     }
 
-    // @todo может $model, $view и $dbConnect правильнее присваивать в свойство например в конструкторе?
-    public function actionTheme($model, $view, $dbConnect)
+    public function actionTheme()
     {
-        // @todo обращаться надо через $this
-        self::logOn();
+        $this->logOn();
         if (!empty($_POST['themeAdd'])) {
             try {
-                $model->themeAdd($dbConnect);
-                // @todo может вынести в родительский метод например $this->redirectTo()
-                header("Location: ".$_SERVER['REQUEST_URI']);
+                $model->themeAdd();
+                $this->redirect();
             } catch (\Exception $ex) {
                 echo $ex->getMessage();
             }
         }
 
         if (!empty($_POST['themeDell'])) {
-            $model->themeDell($dbConnect);
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            $this->model->themeDell();
+            $this->redirect();
         }
-        $data = $model->getDataSumm($dbConnect);
-        echo $view->getTwig()->render('adminTheme.twig', $data);
+        $data = $this->model->getDataSumm();
+        echo $this->view->getTwig()->render('adminTheme.twig', $data);
     }
 
-    // @todo может $model, $view и $dbConnect правильнее присваивать в свойство например в конструкторе?
-    public function actionQuestion($model, $view, $dbConnect)
+    public function actionQuestion()
     {
-        // @todo обращаться надо через $this
-        self::logOn();
+        $this->logOn();
         if(!empty($_POST['question_select'])) {
             $_SESSION['theme_select'] = $_POST['theme_select'];
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: http://" . parent::getServerName() . "/Admin/Select");
+            $page = '/Admin/Select';
+            $this->redirectTo($page);
         }
-        $data = $model->getDataThemes($dbConnect);
-        echo $view->getTwig()->render('adminQuestion.twig', $data);
+        $data = $this->model->getDataThemes();
+        echo $this->view->getTwig()->render('adminQuestion.twig', $data);
     }
 
-    // @todo может $model, $view и $dbConnect правильнее присваивать в свойство например в конструкторе?
-    public function actionEdit($model, $view, $dbConnect)
+    public function actionEdit()
     {
-        // @todo обращаться надо через $this
-        self::logOn();
+        $this->logOn();
         if (!empty($_POST['questionEditDell'])) {
-            $model->questionDell($dbConnect);
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            $this->model->questionDell();
+            $this->redirect();
         }
         if (!empty($_POST['questionEditStatus'])) {
             if($_POST['guestion_status'] == '2') {
-                $model->updateStatusUp($dbConnect);
-                // @todo может вынести в родительский метод например $this->redirectTo()
-                header("Location: " . $_SERVER['REQUEST_URI']);
+                $this->model->updateStatusUp();
+                $this->redirect();
             }
             if($_POST['guestion_status'] == '3') {
-                $model->updateStatusDown($dbConnect);
-                // @todo может вынести в родительский метод например $this->redirectTo()
-                header("Location: " . $_SERVER['REQUEST_URI']);
+                $this->model->updateStatusDown();
+                $this->redirect();
             }
         }
         if (!empty($_POST['questionThemeEdit'])) {
-            $model->questionThemeEdit($dbConnect);
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            $this->model->questionThemeEdit();
+            $this->redirect();
         }
         if(!empty($_POST['answerEdit'])) {
             if(!empty($_POST['answer_id'])) {
-                $model->answerId($dbConnect);
-                // @todo может вынести в родительский метод например $this->redirectTo()
-                header("Location: " . $_SERVER['REQUEST_URI']);
+                $this->model->answerId();
+                $this->redirect();
             } else {
-                $model->answerIdNo($dbConnect);
-                // @todo может вынести в родительский метод например $this->redirectTo()
-                header("Location: " . $_SERVER['REQUEST_URI']);
+                $this->model->answerIdNo();
+                $this->redirect();
             }
         }
         if (!empty($_POST['questionTextEdit'])) {
-            $model->questionTextEdit($dbConnect);
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            $this->model->questionTextEdit();
+            $this->redirect();
         }
         if (!empty($_POST['guestionNameEdit'])) {
-            $model->guestionNameEdit($dbConnect);
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            $this->model->guestionNameEdit();
+            $this->redirect();
         }
-        $data = $model->getDataQuestion($dbConnect);
-        echo $view->getTwig()->render('adminEdit.twig', $data);
+        $data = $this->model->getDataQuestion();
+        echo $this->view->getTwig()->render('adminEdit.twig', $data);
     }
 
-    // @todo может $model, $view и $dbConnect правильнее присваивать в свойство например в конструкторе?
-    public function actionAnswer($model, $view, $dbConnect)
+    public function actionAnswer()
     {
-        // @todo обращаться надо через $this
-        self::logOn();
+        $this->logOn();
         if (!empty($_POST['questionDell'])) {
-            $model->questionDell($dbConnect);
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            $this->model->questionDell();
+            $this->redirect();
         }
         if(!empty($_POST['questionEdit'])) {
             $_SESSION['question_edit'] = $_POST['guestion_id'];
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: http://" . parent::getServerName() . "/Admin/Edit");
+            $page = '/Admin/Edit';
+            $this->redirectTo($page);
         }
         try {
-            $data = $model->getDataAnswerNo($dbConnect);
-            echo $view->getTwig()->render('adminAnswer.twig', $data);
+            $data = $this->model->getDataAnswerNo();
+            echo $this->view->getTwig()->render('adminAnswer.twig', $data);
         } catch (\Exception $ex) {
-            // @todo зачем пустая строка?
-            echo '';
-            // @todo может вынести в родительский метод например $this->redirectTo()
-            header("Location: http://" . parent::getServerName() . "/Admin/NoQuestion");
+            $page = '/Admin/NoQuestion';
+            $this->redirectTo($page);
         }
     }
 
-    // @todo может $model, $view и $dbConnect правильнее присваивать в свойство например в конструкторе?
-    public function actionNoQuestion($model, $view, $dbConnect)
+    public function actionNoQuestion()
     {
-        // @todo обращаться надо через $this
-        self::logOn();
-        echo $view->getTwig()->render('adminNoQuestion.twig');
+        $this->logOn();
+        echo $this->view->getTwig()->render('adminNoQuestion.twig');
     }
 
-    // @todo может $model, $view и $dbConnect правильнее присваивать в свойство например в конструкторе?
-    public function actionExit($model, $view, $dbConnect)
+    public function actionExit()
     {
         session_start();
         session_destroy();
-        header("Location: http://" . parent::getServerName());
+        $page = '';
+        $this->redirectTo($page);
     }
 }

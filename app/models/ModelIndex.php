@@ -4,12 +4,10 @@ namespace diplomApp\models;
 
 class ModelIndex extends \diplomApp\core\Model
 {
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function getData($dbConnect)
+    public function getData()
     {
         //Получаем список тем для формирования меню
-        // @todo надо через $this
-        $sth = parent::selectThemes($dbConnect);
+        $sth = $this->selectThemes();
         while ($list = $sth->fetch(\PDO::FETCH_NUM)) {
             $menu[] = implode($list);
         }
@@ -17,7 +15,7 @@ class ModelIndex extends \diplomApp\core\Model
 
         //Получаем вопросы на которые есть ответ
         $post = [];
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         foreach ($menu as $thema){
             $postList = "SELECT question, answers.answer FROM `questions` JOIN themes ON themes.id=theme_id  "
                                                                        . "JOIN answers ON answers.id=answer_id WHERE themes.theme='$thema' AND status='2'";

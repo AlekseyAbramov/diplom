@@ -4,34 +4,26 @@ namespace diplomApp\models;
 
 class ModelQuestion extends \diplomApp\core\Model
 {
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function startIndex($dbConnect)
+    public function startIndex()
     {
-        // @todo лучше приводить в строке вот так $theme = (string) $_POST['theme'] и т.п.
-        $theme = $_POST['theme'];
-        $text = $_POST['text'];
-        $name = $_POST['name'];
-        $mail = $_POST['email'];
-        // @todo зачем выбирать все темы, когда можно перестроить запрос и найти по $theme?
-        $sth = parent::selectAllThemes($dbConnect);
-        while ($list = $sth->fetch(\PDO::FETCH_NUM)) {
-            if ($list['1'] == $theme) {
-                $themeId = $list['0'];
-            }
-        }
+        $theme = (string) $_POST['theme'];
+        $text = (string) $_POST['text'];
+        $name = (string) $_POST['name'];
+        $mail = (string) $_POST['email'];
+        $db = $this->dbConnect->getDataBase();
+        $sth = $db->prepare("SELECT id FROM `themes` WHERE theme=?");
+        $sth->execute(array($theme));
+        $themeId = $sth->fetch(\PDO::FETCH_NUM);
         $sql = "INSERT INTO `questions`(`theme_id`, `question`, `name`, `mail`, `date_add`) VALUES (?,?,?,?,NOW())";
         $dat = array($themeId, $text, $name, $mail);
-        $db = $dbConnect->getDataBase();
         $st = $db->prepare($sql);
         $st->execute($dat);
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function getData($dbConnect)
+    public function getData()
     {
         //Получаем список тем для формирования меню
-        // @todo надо через $this
-        $sth = parent::selectThemes($dbConnect);
+        $sth = $this->selectThemes();
         $menu = [];
         while ($list = $sth->fetch(\PDO::FETCH_NUM)) {
             $menu[] = implode($list);

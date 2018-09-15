@@ -4,11 +4,9 @@ namespace diplomApp\models;
 
 class ModelAdmin extends \diplomApp\core\Model
 {
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function getThemes($dbConnect)
+    public function getThemes()
     {
-        // @todo надо через $this
-        $sth = parent::selectAllThemes($dbConnect);
+        $sth = $this->selectAllThemes();
         $themes = [];
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $themes[] = $list;
@@ -16,19 +14,17 @@ class ModelAdmin extends \diplomApp\core\Model
         return $themes;
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function getData($dbConnect)
+    public function getData()
     {
         //Получаем список администраторов;
-        $users = $this->getUsers($dbConnect);
+        $users = $this->getUsers();
         $data = ['users' => $users];
         return $data;
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    private function getUsers($dbConnect)
+    private function getUsers()
     {
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->query('SELECT id, login FROM `users`');
         $users = [];
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
@@ -37,30 +33,29 @@ class ModelAdmin extends \diplomApp\core\Model
         return $users;
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function getDataSumm($dbConnect)
+    public function getDataSumm()
     {
         //Получаем список тем
-        $themes = $this->getThemes($dbConnect);
+        $themes = $this->getThemes();
         $i =0;
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sum = [];//Общее количество вопросов
         $sumNo = [];//Вопросы без ответа
         $sumYes = [];//Вопросы с ответами
+        define('STATUS_NO', 1);
+        define('STATUS_YES', 2);
         foreach ($themes as $theme) {
             $id = $theme['id'];
             $sth = $db->prepare("SELECT COUNT(*) FROM `questions` WHERE theme_id=?");
             $sth->execute(array($id));
             $sum[$i]['id'] = $id;
             $sum[$i]['sum'] = implode($sth->fetch(\PDO::FETCH_NUM));
-            // @todo что такое status=1? Может в константу?
-            $sthNo = $db->prepare("SELECT COUNT(*) FROM `questions` WHERE theme_id=? AND status='1'");
-            $sthNo->execute(array($id));
+            $sthNo = $db->prepare("SELECT COUNT(*) FROM `questions` WHERE theme_id=? AND status=?");
+            $sthNo->execute(array($id, STATUS_NO));
             $sumNo[$i]['id'] = $id;
             $sumNo[$i]['sum'] = implode($sthNo->fetch(\PDO::FETCH_NUM));
-            // @todo что такое status=2? Может в константу?
-            $sthYes = $db->prepare("SELECT COUNT(*) FROM `questions` WHERE theme_id=? AND status='2'");
-            $sthYes->execute(array($id));
+            $sthYes = $db->prepare("SELECT COUNT(*) FROM `questions` WHERE theme_id=? AND status=?");
+            $sthYes->execute(array($id, STATUS_YES));
             $sumYes[$i]['id'] = $id;
             $sumYes[$i]['sum'] = implode($sthYes->fetch(\PDO::FETCH_NUM));
             $i++;
@@ -72,21 +67,19 @@ class ModelAdmin extends \diplomApp\core\Model
         return $data;
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function getDataThemes($dbConnect)
+    public function getDataThemes()
     {
         //Получаем список тем
-        $themes = $this->getThemes($dbConnect);
+        $themes = $this->getThemes();
         $data = ['themes' => $themes];
         return $data;    
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function getDataAnswer($dbConnect)
+    public function getDataAnswer()
     {
         //Получаем список тем
-        $themes = $this->getThemes($dbConnect);
-        $db = $dbConnect->getDataBase();
+        $themes = $this->getThemes();
+        $db = $this->dbConnect->getDataBase();
         //Получаем список вопросов и ответов
         foreach ($themes as $theme) {
             if($theme['id'] == $_SESSION['theme_select']){
@@ -116,12 +109,11 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function getDataQuestion($dbConnect)
+    public function getDataQuestion()
     {
         //Получаем вопрос и ответ для редактирования
         $id = $_SESSION['question_edit'];
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("SELECT id, question, status, theme_id, name FROM `questions` WHERE id=?");
         $sth->execute(array($id));
         $question = $sth->fetch(\PDO::FETCH_ASSOC);
@@ -129,7 +121,7 @@ class ModelAdmin extends \diplomApp\core\Model
         $sthAnswer->execute(array($id));
         $answer = $sthAnswer->fetch(\PDO::FETCH_ASSOC);
         //Получаем список тем
-        $themes = $this->getThemes($dbConnect);
+        $themes = $this->getThemes();
         //Находим тему вопроса
         foreach ($themes as $teme) {
             if($teme['id'] == $question['theme_id']) {
@@ -148,16 +140,15 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function getDataAnswerNo($dbConnect)
+    public function getDataAnswerNo()
     {
     //Получаем список тем
-        $themes = $this->getThemes($dbConnect);
+        $themes = $this->getThemes();
 
         //Получаем вопросы без ответа
-        $db = $dbConnect->getDataBase();
-        // @todo вместо подстановки через переменную лучше через prepare(), как в других местах
-        $sth = $db->query("SELECT id, question, date_add, status, theme_id FROM `questions` WHERE answer_id='$0' ORDER BY date_add");
+        $db = $this->dbConnect->getDataBase();
+        $sth = $db->prepare("SELECT id, question, date_add, status, theme_id FROM `questions` WHERE answer_id=? ORDER BY date_add");
+        $sth->execute(array(0));
         while ($list = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $posts[] = $list;
         }
@@ -170,12 +161,11 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function adminAdd($dbConnect)
+    public function adminAdd()
     {
         $user = strip_tags($_POST['login']);
         $password = password_hash(strip_tags($_POST['password']), PASSWORD_DEFAULT);
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("SELECT `login` FROM `users` WHERE login=?");
         $sth->execute(array($user));
         $w = $sth->fetchColumn();
@@ -188,37 +178,30 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function passEdit($dbConnect)
+    public function passEdit()
     {
         $id = $_POST['editPass_id'];
-        $password[] = password_hash(strip_tags($_POST['newPassword']), PASSWORD_DEFAULT);
-        $db = $dbConnect->getDataBase();
-        // @todo вместо подстановки через переменную лучше через prepare(), как в других местах
-        $sth = $db->prepare("UPDATE `users` SET `password`=? WHERE `id`=($id)");
-        $sth->execute($password);
+        $password = password_hash(strip_tags($_POST['newPassword']), PASSWORD_DEFAULT);
+        $db = $this->dbConnect->getDataBase();
+        $sth = $db->prepare("UPDATE `users` SET `password`=? WHERE `id`=?");
+        $sth->execute(array($password, $id));
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function dell($dbConnect)
+    public function dell()
     {
         $id = $_POST['dell_id'];
-        $db = $dbConnect->getDataBase();
-        // @todo вместо подстановки через переменную лучше через prepare(), как в других местах
-        $sth = $db->prepare("DELETE FROM `users` WHERE `id`=($id)");
+        $db = $this->dbConnect->getDataBase();
+        $sth = $db->prepare("DELETE FROM `users` WHERE `id`=?");
         $sth->execute(array($id));
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function themeAdd($dbConnect)
+    public function themeAdd()
     {
-        // @todo лучше приводить в строке вот так $newTheme = (string) $_POST['newTheme']
-        $newTheme = $_POST['newTheme'];
-        // @todo надо использовать mb_strlen()
-        if(strlen($newTheme) == 0){
+        $newTheme = (string) $_POST['newTheme'];
+        if(mb_strlen($newTheme) == 0){
             throw new \Exception('Тема не задана');
         }
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("SELECT `theme` FROM `themes` WHERE theme=?");
         $sth->execute(array($newTheme));
         $w = $sth->fetchColumn();
@@ -230,12 +213,10 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function themeDell($dbConnect)
+    public function themeDell()
     {
-        // @todo лучше приводить в числу вот так $themeId = (int) $_POST['theme_id']
-        $themeId = $_POST['theme_id'];
-        $db = $dbConnect->getDataBase();
+        $themeId = (int) $_POST['theme_id'];
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `themes` WHERE id=?");
         $sth->execute(array($themeId));//Удаляем тему
         $sth = $db->prepare("SELECT `id` FROM `questions` WHERE theme_id=?");//Ищем ответы которые будем удалять
@@ -251,66 +232,54 @@ class ModelAdmin extends \diplomApp\core\Model
         }
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function questionDell($dbConnect)
+    public function questionDell()
     {
-        // @todo лучше приводить в числу вот так $questionIdDell = (int) $_POST['guestion_id']
-        $questionIdDell = $_POST['guestion_id'];
-        $db = $dbConnect->getDataBase();
+        $questionIdDell = (int) $_POST['guestion_id'];
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("DELETE FROM `questions` WHERE id=?");
         $sth->execute(array($questionIdDell));//Удаляем вопрос
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function updateStatusUp($dbConnect)
+    public function updateStatusUp()
     {
-        // @todo лучше приводить в числу вот так $questionEditStatusId = (int) $_POST['guestion_id']
-        $questionEditStatusId = $_POST['guestion_id'];
-        $db = $dbConnect->getDataBase();
+        $questionEditStatusId = (int) $_POST['guestion_id'];
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `status`=3 WHERE id=?");
         $sth->execute(array($questionEditStatusId));
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function updateStatusDown($dbConnect)
+    public function updateStatusDown()
     {
-        // @todo лучше приводить в числу вот так $questionEditStatusId = (int) $_POST['guestion_id']
-        $questionEditStatusId = $_POST['guestion_id'];
-        $db = $dbConnect->getDataBase();
+        $questionEditStatusId = (int) $_POST['guestion_id'];
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `status`=2 WHERE id=?");
         $sth->execute(array($questionEditStatusId));
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function questionThemeEdit($dbConnect)
+    public function questionThemeEdit()
     {
-        // @todo лучше приводить в числу вот так $questionEditStatusId = (int) $_POST['guestion_id']
-        $questionEditStatusId = $_POST['guestion_id'];
+        $questionEditStatusId = (int) $_POST['guestion_id'];
         $themeEditId = $_POST['themeEdit'];
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `theme_id`='$themeEditId' WHERE id=?");
         $sth->execute(array($questionEditStatusId));
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function answerId($dbConnect)
+    public function answerId()
     {
-        // @todo лучше приводить в числу вот так $id = (int) $_POST['guestion_id']
-        $id = $_POST['question_id'];
+        $id = (int) $_POST['question_id'];
         $text = trim($_POST['text']);
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `answers` SET `answer`='$text' WHERE question_id=?");
         $sth->execute(array($id));
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function answerIdNo($dbConnect)
+    public function answerIdNo()
     {
-        // @todo лучше приводить в числу вот так $id = (int) $_POST['guestion_id']
-        $id = $_POST['question_id'];
+        $id = (int) $_POST['question_id'];
         $text = trim($_POST['text']);
         $data = array($id, $_SESSION['id'], $text);
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("INSERT INTO `answers`(`question_id`, `admin_id`, `answer`) VALUES (?, ?, ?)");
         $sth->execute($data);
         $newAnswerId = $db->lastInsertId();
@@ -320,24 +289,20 @@ class ModelAdmin extends \diplomApp\core\Model
         $sth->execute(array($id));
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function questionTextEdit($dbConnect)
+    public function questionTextEdit()
     {
-        // @todo лучше приводить в числу вот так $questionEditTextId = (int) $_POST['guestion_id']
-        $questionEditTextId = $_POST['question_id'];
+        $questionEditTextId = (int) $_POST['question_id'];
         $textEdit = trim($_POST['text']);
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `question`='$textEdit' WHERE id=?");
         $sth->execute(array($questionEditTextId));
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function guestionNameEdit($dbConnect)
+    public function guestionNameEdit()
     {
-        // @todo лучше приводить в числу вот так $questionEditNameId = (int) $_POST['guestion_id']
-        $questionEditNameId = $_POST['question_id'];
+        $questionEditNameId = (int) $_POST['question_id'];
         $nameEdit = trim($_POST['text']);
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         $sth = $db->prepare("UPDATE `questions` SET `name`='$nameEdit' WHERE id=?");
         $sth->execute(array($questionEditNameId));
     }           

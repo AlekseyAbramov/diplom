@@ -4,11 +4,9 @@ namespace diplomApp\controllers;
 
 class ControllerIndex extends \diplomApp\core\Controller
 {
-    // @todo может $model, $view и $dbConnect правильнее присваивать в свойство например в конструкторе?
-    public function actionIndex($model, $view, $dbConnect)
+    public function actionIndex()
     {
-        $data = $model->getData($dbConnect);
-        echo $view->getTwig()->render('template.twig', $data);
+        $data = $this->model->getData();
+        echo $this->view->getTwig()->render('template.twig', $data);
     }
 }
-

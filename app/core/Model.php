@@ -4,17 +4,22 @@ namespace diplomApp\core;
 
 abstract class Model
 {
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function selectAllThemes($dbConnect)
+    protected $dbConnect;
+    
+    public function __construct($dbConnect)
     {
-        $db = $dbConnect->getDataBase();
+        $this->dbConnect = $dbConnect;
+    }
+
+    public function selectAllThemes()
+    {
+        $db = $this->dbConnect->getDataBase();
         return $sth = $db->query('SELECT * FROM `themes`');
     }
 
-    // @todo может $dbConnect через конструктор класть в свойство?
-    public function selectThemes($dbConnect)
+    public function selectThemes()
     {
-        $db = $dbConnect->getDataBase();
+        $db = $this->dbConnect->getDataBase();
         return $sth = $db->query('SELECT theme FROM themes');
     }
 }
