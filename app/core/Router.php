@@ -46,7 +46,7 @@ class Router
         }
         
         $model = new $modelClass($this->dbConnect);
-        $view = new \diplomApp\core\View();
+        $view = new \diplomApp\core\View(); // достаточно указать класс View т.к. неймспейс тот же
         
         $controller = new $controllerClass($this->config, $view, $model);
         if(!method_exists($controller, $action)) {

@@ -2,8 +2,12 @@
 
 namespace diplomApp\controllers;
 
-class ControllerAdmin  extends \diplomApp\core\Controller
+use diplomApp\models\ModelAdmin;
+
+class ControllerAdmin extends \diplomApp\core\Controller
 {
+    /** @var  ModelAdmin */
+    protected $model; // такая запись позволяет указать тип данных в свойстве
 
     public function actionIndex()
     {
@@ -71,6 +75,7 @@ class ControllerAdmin  extends \diplomApp\core\Controller
         $this->logOn();
         if (!empty($_POST['themeAdd'])) {
             try {
+                // не существующая переменная
                 $model->themeAdd();
                 $this->redirect();
             } catch (\Exception $ex) {

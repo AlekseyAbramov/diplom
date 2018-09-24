@@ -5,7 +5,15 @@ namespace diplomApp\core;
 abstract class Controller
 {
     protected $config, $view, $model, $protocol;
-    
+
+    /**
+     * Указание типов данных для параметров помогает другим разработчикам
+     * и текстовому редактору лучше ориентироваться в коде
+     *
+     * @param $config Config
+     * @param $view View
+     * @param $model Model
+     */
     public function __construct($config, $view, $model)
     {
         $this->config = $config;
@@ -50,7 +58,7 @@ abstract class Controller
     {
         session_start();
         if (empty($_SESSION['user'])) {
-            $this->redirectTo();
+            $this->redirectTo(); // пропущен обязательный параметр
             die();
         }
     }

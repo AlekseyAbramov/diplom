@@ -18,7 +18,7 @@ class Config
     
     public function getConfig($key)
     {
-        return $this->values['database'][$key];
+        return $this->values['database'][$key]; // а если такого индекса нет? Может добавить проверку?
     }
     
     public function getServerName()
