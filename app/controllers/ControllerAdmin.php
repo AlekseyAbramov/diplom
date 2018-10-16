@@ -7,12 +7,12 @@ use diplomApp\models\ModelAdmin;
 class ControllerAdmin extends \diplomApp\core\Controller
 {
     /** @var  ModelAdmin */
-    protected $model; // такая запись позволяет указать тип данных в свойстве
+    protected $model;
 
     public function actionIndex()
     {
+        $this->logOn();
         if (!empty($_POST['adminAdd'])) {
-            $this->logOn();
             try {
                 $this->userControl();
                 $this->model->adminAdd();
@@ -75,8 +75,7 @@ class ControllerAdmin extends \diplomApp\core\Controller
         $this->logOn();
         if (!empty($_POST['themeAdd'])) {
             try {
-                // не существующая переменная
-                $model->themeAdd();
+                $this->model->themeAdd();
                 $this->redirect();
             } catch (\Exception $ex) {
                 echo $ex->getMessage();

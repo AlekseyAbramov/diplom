@@ -18,7 +18,10 @@ class Config
     
     public function getConfig($key)
     {
-        return $this->values['database'][$key]; // а если такого индекса нет? Может добавить проверку?
+        if (!array_key_exists($key, $this->values['database'])) {
+            throw new \Exception ('Отсутствует ключ ' . $key . ' в разделе database файла app/config.yml');
+        }
+        return $this->values['database'][$key];
     }
     
     public function getServerName()

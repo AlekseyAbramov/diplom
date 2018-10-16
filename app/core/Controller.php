@@ -6,10 +6,7 @@ abstract class Controller
 {
     protected $config, $view, $model, $protocol;
 
-    /**
-     * Указание типов данных для параметров помогает другим разработчикам
-     * и текстовому редактору лучше ориентироваться в коде
-     *
+    /*
      * @param $config Config
      * @param $view View
      * @param $model Model
@@ -58,7 +55,8 @@ abstract class Controller
     {
         session_start();
         if (empty($_SESSION['user'])) {
-            $this->redirectTo(); // пропущен обязательный параметр
+            $page ='';
+            $this->redirectTo($page);
             die();
         }
     }
